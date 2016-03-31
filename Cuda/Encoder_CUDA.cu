@@ -70,6 +70,7 @@ __device__ void (*pointerFunct_FCT[8]) (int *arg1, int arg2) = {
 };
 __device__ void FCT4x4(int *iCoeff)
 {
+    printf("%d %d %d %d", iCoeff[0], iCoeff[1], iCoef[2], iCoef[3]);
     /*int arrayLocal[4];
     int arrayTemp[8][4] = {
         { 0, 3, 12, 15},
