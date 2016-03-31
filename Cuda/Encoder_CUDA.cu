@@ -535,10 +535,10 @@ int main()
     EncFirstStagePreFiltering<<< DimGrid, DimBlock>>>(imageDevice, imageHeight, imageWidth);
 	//cudaFree(arrayLocal_16);
     // first stage frequency transform
-    EncFirstStageOverlapFilter<<< DimGrid2, 1>>>(imageDevice, imageHeight, imageWidth);
+    //EncFirstStageOverlapFilter<<< DimGrid2, 1>>>(imageDevice, imageHeight, imageWidth);
     // second stage pre-filtering
 
-    //EncSecondStagePreFiltering<<< DimGrid, 1>>>(imageDevice, imageHeight, imageWidth);
+    EncSecondStagePreFiltering<<< DimGrid, 1>>>(imageDevice, imageHeight, imageWidth);
 
     /* kernel function invocation end*/
 
