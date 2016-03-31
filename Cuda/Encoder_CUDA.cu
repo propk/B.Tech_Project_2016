@@ -258,7 +258,7 @@ __device__ void OverlapPreFilter2(int *iCoeff)
 
 __global__ void EncFirstStagePreFiltering(int *image, int numRows, int numCols)
 {
-    /*int i, j;
+    int i, j;
     int arrayLocal[16];
     int block_i = threadIdx.x, block_j = threadIdx.y;
     int macro_i = blockIdx.x, macro_j = blockIdx.y;
@@ -279,8 +279,7 @@ __global__ void EncFirstStagePreFiltering(int *image, int numRows, int numCols)
         {
             image[(macro_i*16 + block_i*4 + i) * numCols + macro_j*16 + block_j*4 + j] = arrayLocal[i*4 + j];
         }
-    }*/
-    image[0] = 72;
+    }
 }
 
 __global__ void EncSecondStagePreFiltering(int* image, int numRows, int numCols)
@@ -539,7 +538,7 @@ int main()
     //EncSecondStageOverlapFilter<<< DimGrid2, 1>>>(imageDevice, imageHeight, imageWidth);
     // first stage pre-filtering
 	//cudaMalloc((void**) &arrayLocal_16, size);
-    EncFirstStagePreFiltering<<< 1, 1>>>(imageDevice, imageHeight, imageWidth);
+    EncFirstStagePreFiltering<<< DimGrid, DimBlock>>>(imageDevice, imageHeight, imageWidth);
 	//cudaFree(arrayLocal_16);
     // first stage frequency transform
     //EncFirstStageOverlapFilter<<< DimGrid2, 1>>>(imageDevice, imageHeight, imageWidth);
