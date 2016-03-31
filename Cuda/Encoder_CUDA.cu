@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-__global__ int *arrayLocal_16, *arrayLocal_4;
+//__global__ int *arrayLocal_16, *arrayLocal_4;
 
 __device__ void T2x2H(int *iCoeff, int valRound)
 {
@@ -272,7 +272,7 @@ __global__ void EncFirstStagePreFiltering(int *image, int numRows, int numCols)
         }
     }
 
-    FCT4x4();
+    FCT4x4(arrayLocal);
 
     for (i = 0; i < 4; ++i)
     {
