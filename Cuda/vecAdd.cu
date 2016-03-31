@@ -1,5 +1,5 @@
 // MP 1
-#include <wb.h>
+#include <stdio.h>
 
 __global__ void vecAdd(float *in1, float *in2, float *out, int len) {
   //@@ Insert code to implement vector addition here
@@ -16,7 +16,6 @@ int main() {
   float *deviceInput2;
   float *deviceOutput;
 
-  wbTime_start(Generic, "Importing data and creating memory on host");
   hostInput1 = [1,2,3,4];
   hostInput2 = [5,6,7,8];
   hostOutput = [0,0,0,0];
