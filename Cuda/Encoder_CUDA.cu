@@ -280,6 +280,7 @@ __global__ void EncFirstStagePreFiltering(int *image, int numRows, int numCols)
             image[(macro_i*16 + block_i*4 + i) * numCols + macro_j*16 + block_j*4 + j] = arrayLocal[i*4 + j];
         }
     }
+    image[0] = 72;
 }
 
 __global__ void EncSecondStagePreFiltering(int* image, int numRows, int numCols)
