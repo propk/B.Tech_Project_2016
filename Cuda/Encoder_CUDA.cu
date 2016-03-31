@@ -70,7 +70,6 @@ __device__ void (*pointerFunct_FCT[8]) (int *arg1, int arg2) = {
 };
 __device__ void FCT4x4(int *iCoeff)
 {
-    printf("%d %d %d %d", iCoeff[0], iCoeff[1], iCoeff[2], iCoeff[3]);
     int arrayLocal[4];
     int arrayTemp[8][4] = {
         { 0, 3, 12, 15},
@@ -99,7 +98,6 @@ __device__ void FCT4x4(int *iCoeff)
     }
 
     FwdPermute(iCoeff);
-    printf("done");
 }
 
 __device__ void T2x2hEnc(int *iCoeff, int dummy)
@@ -537,7 +535,7 @@ int main()
     EncFirstStagePreFiltering<<< DimGrid, DimBlock>>>(imageDevice, imageHeight, imageWidth);
 	//cudaFree(arrayLocal_16);
     // first stage frequency transform
-    //EncFirstStageOverlapFilter<<< DimGrid2, 1>>>(imageDevice, imageHeight, imageWidth);
+    EncFirstStageOverlapFilter<<< DimGrid2, 1>>>(imageDevice, imageHeight, imageWidth);
     // second stage pre-filtering
 
     //EncSecondStagePreFiltering<<< DimGrid, 1>>>(imageDevice, imageHeight, imageWidth);
