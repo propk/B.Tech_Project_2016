@@ -542,7 +542,7 @@ int main()
     //EncSecondStagePreFiltering<<< DimGrid, 1>>>(imageDevice, imageHeight, imageWidth);
 
     /* kernel function invocation end*/
-    
+    cudaDeviceSynchronize();
     // copy from device to host
     cudaMemcpy(image, imageDevice, size, cudaMemcpyDeviceToHost);
     
