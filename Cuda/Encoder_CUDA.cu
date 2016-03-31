@@ -92,7 +92,7 @@ __device__ void FCT4x4(int *iCoeff)
         for(j = 0; j < 4; j++)
             arrayLocal[j] = iCoeff[arrayTemp[i][j]];
 
-        //(*pointerFunct_FCT[i]) (arrayLocal, arg2Array[i]);
+        (*pointerFunct_FCT[0]) (arrayLocal, arg2Array[0]);
 
         for(j = 0; j < 4; j++)
             iCoeff[arrayTemp[i][j]] = arrayLocal[j];
