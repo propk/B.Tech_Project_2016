@@ -268,7 +268,7 @@ __global__ void EncFirstStagePreFiltering(int *image, int numRows, int numCols)
     {
         for (j = 0; j < 4; ++j)
         {
-            arrayLocal_16[i*4 + j] = image[ (macro_i*16 + block_i*4 + i) * numCols + macro_j*16 + block_j*4 + j];
+            arrayLocal[i*4 + j] = image[ (macro_i*16 + block_i*4 + i) * numCols + macro_j*16 + block_j*4 + j];
         }
     }
 
