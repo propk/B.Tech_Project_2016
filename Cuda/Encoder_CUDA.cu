@@ -539,7 +539,7 @@ int main()
     //EncSecondStageOverlapFilter<<< DimGrid2, 1>>>(imageDevice, imageHeight, imageWidth);
     // first stage pre-filtering
 	//cudaMalloc((void**) &arrayLocal_16, size);
-    EncFirstStagePreFiltering<<< DimGrid, DimBlock>>>(imageDevice, imageHeight, imageWidth);
+    EncFirstStagePreFiltering<<< 1, 1>>>(imageDevice, imageHeight, imageWidth);
 	//cudaFree(arrayLocal_16);
     // first stage frequency transform
     //EncFirstStageOverlapFilter<<< DimGrid2, 1>>>(imageDevice, imageHeight, imageWidth);
