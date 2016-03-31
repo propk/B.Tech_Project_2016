@@ -542,10 +542,10 @@ int main()
     EncSecondStagePreFiltering<<< DimGrid, 1>>>(imageDevice, imageHeight, imageWidth);
 
     /* kernel function invocation end*/
-
+    image[0][0] = 34;
     // copy from device to host
     cudaMemcpy(image, imageDevice, size, cudaMemcpyDeviceToHost);
-    image[0][0] = 34;
+    
 
     //free device memory
     cudaFree(imageDevice);
