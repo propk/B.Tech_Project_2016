@@ -256,7 +256,7 @@ __device__ void OverlapPreFilter2(int *iCoeff)
     iCoeff[1] -= ((iCoeff[0] + 2) >> 2);
 }
 
-__global__ void EncFirstStagePreFiltering(float *image, int numRows, int numCols)
+__global__ void EncFirstStagePreFiltering(int *image, int numRows, int numCols)
 {
     /*int i, j;
     int arrayLocal[16];
@@ -525,8 +525,8 @@ int main()
     }
 
     // allocate & copy image memory in device
-    float *imageDevice;
-    size_t size = imageWidth * imageHeight * sizeof(float);
+    int *imageDevice;
+    size_t size = imageWidth * imageHeight * sizeof(int);
     cudaMalloc((void**) &imageDevice, size );
     cudaMemcpy(imageDevice, image, size, cudaMemcpyHostToDevice);
 
