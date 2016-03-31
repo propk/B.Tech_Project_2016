@@ -92,7 +92,7 @@ __device__ void FCT4x4(int *iCoeff)
         for(j = 0; j < 4; j++)
             arrayLocal[j] = iCoeff[arrayTemp[i][j]];
 
-        (*pointerFunct_FCT[6]) (arrayLocal, arg2Array[6]);
+        (*pointerFunct_FCT[7]) (arrayLocal, arg2Array[7]);
 
         for(j = 0; j < 4; j++)
             iCoeff[arrayTemp[i][j]] = arrayLocal[j];
@@ -507,8 +507,8 @@ int main()
     FILE *op = fopen("encoded.txt", "w");
     //printf("1\n");
     // read image in host
-    int imageWidth, imageHeight;
-    scanf("%d %d", &imageHeight, &imageWidth);
+    int imageWidth = 112, imageHeight=128;
+    //scanf("%d %d", &imageHeight, &imageWidth);
     int **image = (int**) malloc(imageHeight * sizeof(int*) );
     int i, j;
 
@@ -557,6 +557,7 @@ int main()
             fprintf(op, "%d ", image[i][j] );
         fprintf(op, "\n");
     }
+    printf("Completed");
     fclose(ip);
     fclose(op);
     return 0;
