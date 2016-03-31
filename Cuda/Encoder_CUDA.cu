@@ -589,12 +589,12 @@ int main()
 
   //@@ Initialize the grid and block dimensions here
 	
-	dim3 DimGrid((inputLength-1)/256+1, 1, 1);
-	dim3 DimBlock(256, 1, 1);
+	dim3 DimGrid12((inputLength-1)/256+1, 1, 1);
+	dim3 DimBlock12(256, 1, 1);
 
   //@@ Launch the GPU Kernel here
 	
-	vecAdd<<< DimGrid, DimBlock >>>(deviceInput1, deviceInput2, deviceOutput, inputLength);
+	vecAdd<<< DimGrid12, DimBlock12 >>>(deviceInput1, deviceInput2, deviceOutput, inputLength);
 
   cudaDeviceSynchronize();
   //@@ Copy the GPU memory back to the CPU here
