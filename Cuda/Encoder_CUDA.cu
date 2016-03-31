@@ -300,7 +300,7 @@ __global__ void EncSecondStagePreFiltering(int* image, int numRows, int numCols)
     {
         for (j = 0; j < 4; ++j)
         {
-            image[(macro_i*16 + i*4) * numCols + macro_j*16 + j*4] = arrayLocal[i*4 + j];
+            image[(macro_i*16 + i*4) * numCols + macro_j*16 + j*4] = arrayLocal[i*4 + j]+1;
         }
     }
 }
