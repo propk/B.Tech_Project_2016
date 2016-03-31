@@ -86,19 +86,19 @@ __device__ void FCT4x4(int *iCoeff)
 
     int arg2Array[8] = { 0, 0, 0, 0, 1, 0, 0, 0};
     int i, j;
-/*
+    
     for(i = 0; i < 8; i++)
     {
         for(j = 0; j < 4; j++)
             arrayLocal[j] = iCoeff[arrayTemp[i][j]];
 
-        (*pointerFunct_FCT[i]) (arrayLocal, arg2Array[i]);
+        //(*pointerFunct_FCT[i]) (arrayLocal, arg2Array[i]);
 
         for(j = 0; j < 4; j++)
             iCoeff[arrayTemp[i][j]] = arrayLocal[j];
     }
 
-    FwdPermute(iCoeff);*/
+    FwdPermute(iCoeff);
     printf("done");
 }
 
