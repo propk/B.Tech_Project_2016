@@ -512,13 +512,13 @@ int main()
     FILE *op = fopen("encoded.txt", "w");
     //printf("1\n");
     // read image in host
-    int imageWidth = 16, imageHeight=16;
+    int imageWidth = 112, imageHeight=128;
     //scanf("%d %d", &imageHeight, &imageWidth);
-    int **image = (int**) malloc(imageHeight * sizeof(int*) );
+    int image[128][112]; // = (int**) malloc(imageHeight * sizeof(int*) );
     int i, j;
 
     for(i = 0; i < imageHeight; i++){
-        image[i] = (int*) malloc(imageWidth * sizeof(int) );
+        //image[i] = (int*) malloc(imageWidth * sizeof(int) );
 
         for(j = 0; j < imageWidth; j++)
             fscanf(ip, "%d", &image[i][j]);
