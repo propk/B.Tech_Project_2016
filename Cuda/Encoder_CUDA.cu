@@ -70,7 +70,7 @@ __device__ void (*pointerFunct_FCT[8]) (int *arg1, int arg2) = {
 };
 __device__ void FCT4x4(int *iCoeff)
 {
-    int arrayLocal[4];
+    /*int arrayLocal[4];
     int arrayTemp[8][4] = {
         { 0, 3, 12, 15},
         { 5, 6, 9, 10},
@@ -97,7 +97,8 @@ __device__ void FCT4x4(int *iCoeff)
             iCoeff[arrayTemp[i][j]] = arrayLocal[j];
     }
 
-    FwdPermute(iCoeff);
+    FwdPermute(iCoeff);*/
+    printf("done");
 }
 
 __device__ void T2x2hEnc(int *iCoeff, int dummy)
