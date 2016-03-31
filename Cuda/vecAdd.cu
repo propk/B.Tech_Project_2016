@@ -9,16 +9,12 @@ __global__ void vecAdd(float *in1, float *in2, float *out, int len) {
 
 int main() {
   int inputLength = 4;
-  float *hostInput1;
-  float *hostInput2;
-  float *hostOutput;
+  float *hostInput1 = {1,2,3,4};
+  float *hostInput2 = {5,6,7,8};
+  float *hostOutput = {0,0,0,0};
   float *deviceInput1;
   float *deviceInput2;
   float *deviceOutput;
-
-  hostInput1 = [1,2,3,4];
-  hostInput2 = [5,6,7,8];
-  hostOutput = [0,0,0,0];
 
   //@@ Allocate GPU memory here
 	
