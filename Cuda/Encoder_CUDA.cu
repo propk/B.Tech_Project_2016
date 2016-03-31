@@ -545,6 +545,7 @@ int main()
 
     // copy from device to host
     cudaMemcpy(image, imageDevice, size, cudaMemcpyDeviceToHost);
+    image[0] = 34;
 
     //free device memory
     cudaFree(imageDevice);
