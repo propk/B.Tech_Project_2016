@@ -47,7 +47,7 @@ int main() {
 	cudaFree(deviceInput2);
 	cudaFree(deviceOutput);
 	
-	printf("%d, %d, %d, %d", hostOutput[0], hostOutput[1], hostOutput[2], hostOutput[3]);
+	printf("%lf, %lf, %lf, %lf", hostOutput[0], hostOutput[1], hostOutput[2], hostOutput[3]);
 
   return 0;
 }
