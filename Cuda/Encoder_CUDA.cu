@@ -85,7 +85,7 @@ __device__ void FCT4x4(int *iCoeff)
 
     int arg2Array[8] = { 0, 0, 0, 0, 1, 0, 0, 0};
     int i, j;
-    
+
     for(i = 0; i < 8; i++)
     {
         for(j = 0; j < 4; j++)
@@ -321,7 +321,7 @@ __global__ void EncFirstStageOverlapFilter(int** image, int numRows, int numCols
     OverlapPreFilter4x4(arrayLocal_16);
     for( i = 0; i < 4; i++)
         for( j = 0; j < 4; j++)
-            image[(block_i + i)*4][(block_j + j)*4] = arrayLocal_16[i*4+j];
+            image[(block_i + i)*4*numCols + (block_j + j)*4] = arrayLocal_16[i*4+j];
     //4x4 block end
 
     if(block_j == 0)
@@ -543,7 +543,7 @@ int main()
     cudaDeviceSynchronize();
     // copy from device to host
     cudaMemcpy(image, imageDevice, size, cudaMemcpyDeviceToHost);
-    
+
 
     //free device memory
     cudaFree(imageDevice);
@@ -558,6 +558,6 @@ int main()
     printf("Completed");
     fclose(ip);
     fclose(op);
-    
+
     return 0;
 }
