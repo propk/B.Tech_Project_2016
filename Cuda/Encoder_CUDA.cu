@@ -330,19 +330,19 @@ __global__ void EncFirstStageOverlapFilter(int* image, int numRows, int numCols)
         for(i = 0; i < 2; i++)
         {
             for(j = 0; j < 4; j++)
-                arrayLocal_4[j] = image[((block_i+j)*4)*numCols + i*4];
+                arrayLocal_4[j] = image[((block_i*4+j+2)*4)*numCols + i*4];
             OverlapPreFilter4(arrayLocal_4);
             for(j = 0; j < 4; j++)
-                image[((block_i+j)*4)*numCols + i*4] = arrayLocal_4[j];
+                image[((block_i*4+j+2)*4)*numCols + i*4] = arrayLocal_4[j];
         }
         // right edge
         for(i = numCols-2; i < numCols; i++)
         {
             for(j = 0; j < 4; j++)
-                arrayLocal_4[j] = image[((block_i+j)*4)*numCols + i*4];
+                arrayLocal_4[j] = image[((block_i*4+j+2)*4)*numCols + i*4];
             OverlapPreFilter4(arrayLocal_4);
             for(j = 0; j < 4; j++)
-                image[((block_i+j)*4)*numCols + i*4] = arrayLocal_4[j];
+                image[((block_i*4+j+2)*4)*numCols + i*4] = arrayLocal_4[j];
         }
     }
 
@@ -353,19 +353,19 @@ __global__ void EncFirstStageOverlapFilter(int* image, int numRows, int numCols)
         for(i = 0; i < 2; i++)
         {
             for(j = 0; j < 4; j++)
-                arrayLocal_4[j] = image[(i*4)*numCols + (block_j+j)*4];
+                arrayLocal_4[j] = image[(i*4)*numCols + (block_j*4+j+2)*4];
             OverlapPreFilter4(arrayLocal_4);
             for(j = 0; j < 4; j++)
-                image[(i*4)*numCols + (block_j+j)*4] = arrayLocal_4[j];
+                image[(i*4)*numCols + (block_j*4+j+2)*4] = arrayLocal_4[j];
         }
         //bottom edge
         for(i = numRows-2; i < numRows; i++)
         {
             for(j = 0; j < 4; j++)
-                arrayLocal_4[j] = image[(i*4)*numCols + (block_j+j)*4];
+                arrayLocal_4[j] = image[(i*4)*numCols + (block_j*4+2+j)*4];
             OverlapPreFilter4(arrayLocal_4);
             for(j = 0; j < 4; j++)
-                image[(i*4)*numCols + (block_j+j)*4] = arrayLocal_4[j];
+                image[(i*4)*numCols + (block_j*4+j+2)*4] = arrayLocal_4[j];
         }
     }
 
