@@ -470,30 +470,30 @@ __global__ void EncSecondStageOverlapFilter(int* image, int numRows, int numCols
         // top left
         arrayLocal_4[0] = image[(0)*numCols + 0], arrayLocal_4[1] = image[(0)*numCols + 1];
         arrayLocal_4[2] = image[(1)*numCols + 0], arrayLocal_4[2] = image[(1)*numCols + 1];
-        //OverlapPreFilter4(arrayLocal_4);
+        OverlapPreFilter4(arrayLocal_4);
         image[(0)*numCols + 0] = arrayLocal_4[0], image[(0)*numCols + 1] = arrayLocal_4[1];
-        image[(1)*numCols + 0] = arrayLocal_4[2], image[(1)*numCols + 1] = arrayLocal_4[2];
+        image[(1)*numCols + 0] = arrayLocal_4[2], image[(1)*numCols + 1] = arrayLocal_4[3];
 
         // top right
         arrayLocal_4[0] = image[(0)*numCols + numCols-2], arrayLocal_4[1] = image[(0)*numCols + numCols-1];
         arrayLocal_4[2] = image[(1)*numCols + numCols-2], arrayLocal_4[2] = image[(1)*numCols + numCols-1];
         OverlapPreFilter4(arrayLocal_4);
         image[(0)*numCols + numCols-2] = arrayLocal_4[0], image[(0)*numCols + numCols-1] = arrayLocal_4[1];
-        image[(1)*numCols + numCols-2] = arrayLocal_4[2], image[(1)*numCols + numCols-1] = arrayLocal_4[2];
+        image[(1)*numCols + numCols-2] = arrayLocal_4[2], image[(1)*numCols + numCols-1] = arrayLocal_4[3];
 
         // bottom left
         arrayLocal_4[0] = image[(numRows-2)*numCols + 0], arrayLocal_4[1] = image[(numRows-2)*numCols + 1];
         arrayLocal_4[2] = image[(numRows-1)*numCols + 0], arrayLocal_4[2] = image[(numRows-1)*numCols + 1];
         OverlapPreFilter4(arrayLocal_4);
         image[(numRows-2)*numCols + 0] = arrayLocal_4[0], image[(numRows-2)*numCols + 1] = arrayLocal_4[1];
-        image[(numRows-1)*numCols + 0] = arrayLocal_4[2], image[(numRows-1)*numCols + 1] = arrayLocal_4[2];
+        image[(numRows-1)*numCols + 0] = arrayLocal_4[2], image[(numRows-1)*numCols + 1] = arrayLocal_4[3];
 
         // bottom right
         arrayLocal_4[0] = image[(numRows-2)*numCols + numCols-2], arrayLocal_4[1] = image[(numRows-2)*numCols + numCols-1];
         arrayLocal_4[2] = image[(numRows-1)*numCols + numCols-2], arrayLocal_4[2] = image[(numRows-1)*numCols + numCols-1];
         OverlapPreFilter4(arrayLocal_4);
         image[(numRows-2)*numCols + numCols-2] = arrayLocal_4[0], image[(numRows-2)*numCols + numCols-1] = arrayLocal_4[1];
-        image[(numRows-1)*numCols + numCols-2] = arrayLocal_4[2], image[(numRows-1)*numCols + numCols-1] = arrayLocal_4[2];
+        image[(numRows-1)*numCols + numCols-2] = arrayLocal_4[2], image[(numRows-1)*numCols + numCols-1] = arrayLocal_4[3];
     }
 }
 
