@@ -452,7 +452,7 @@ __global__ void EncSecondStageOverlapFilter(int* image, int numRows, int numCols
                 arrayLocal_4[j] = image[(i)*numCols + block_j*4 + 2+j];
             OverlapPreFilter4(arrayLocal_4);
             for(j = 0; j < 4; j++)
-                image[(i)*numCols + block_j+j*4 + 2] = arrayLocal_4[j];
+                image[(i)*numCols + block_j*4 + 2+j] = arrayLocal_4[j];
         }
         //bottom edge
         for(i = numRows-2; i < numRows; i++)
