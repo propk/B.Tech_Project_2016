@@ -305,7 +305,7 @@ __global__ void EncSecondStagePreFiltering(int* image, int numRows, int numCols)
     }
 }
 
-__global__ void EncFirstStageOverlapFilter(int** image, int numRows, int numCols)
+__global__ void EncFirstStageOverlapFilter(int* image, int numRows, int numCols)
 {
     int arrayLocal_16[16], arrayLocal_4[4];
     int block_i = blockIdx.x, block_j = blockIdx.y, i, j;
@@ -401,7 +401,7 @@ __global__ void EncFirstStageOverlapFilter(int** image, int numRows, int numCols
     }
 }
 
-__global__ void EncSecondStageOverlapFilter(int** image, int numRows, int numCols)
+__global__ void EncSecondStageOverlapFilter(int* image, int numRows, int numCols)
 {
     int arrayLocal_16[16], arrayLocal_4[4];
     int block_i = blockIdx.x, block_j = blockIdx.y, i, j;
