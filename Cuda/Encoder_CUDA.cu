@@ -336,7 +336,7 @@ __global__ void EncFirstStageOverlapFilter(int* image, int numRows, int numCols)
                 image[((block_i+j)*4)*numCols + i*4] = arrayLocal_4[j];
         }
         // right edge
-        for(i = numCols-2; i < numCols-2; i++)
+        for(i = numCols-2; i < numCols; i++)
         {
             for(j = 0; j < 4; j++)
                 arrayLocal_4[j] = image[((block_i+j)*4)*numCols + i*4];
@@ -526,13 +526,13 @@ int main()
     dim3 DimGrid(imageHeight/16, imageWidth/16);
     dim3 DimBlock(4, 4);
     dim3 DimGrid2(imageHeight/4-1, imageWidth/4-1);
-
+    dim3 DimGrid3(imageHeight/16-1, imageWidth/16-1);
     // second stage frequency transform
     EncSecondStageOverlapFilter<<< DimGrid2, 1>>>(imageDevice, imageHeight, imageWidth);
     // first stage pre-filtering
     EncFirstStagePreFiltering<<< DimGrid, DimBlock>>>(imageDevice, imageHeight, imageWidth);
     // first stage frequency transform
-    EncFirstStageOverlapFilter<<< DimGrid2, 1>>>(imageDevice, imageHeight, imageWidth);
+    //EncFirstStageOverlapFilter<<< DimGrid3, 1>>>(imageDevice, imageHeight, imageWidth);
     // second stage pre-filtering
     EncSecondStagePreFiltering<<< DimGrid, 1>>>(imageDevice, imageHeight, imageWidth);
 
