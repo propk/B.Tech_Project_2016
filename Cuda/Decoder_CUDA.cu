@@ -78,6 +78,11 @@ __device__ void T2pt(int *iCoeff)
     iCoeff[1] += iCoeff[0];
 }
 
+void (*pointerFunct[8]) (int *arg1, int arg2) = {
+    T2x2H, InvTOdd, InvTOdd, InvTOddOdd,
+    T2x2H, T2x2H, T2x2H, T2x2H
+};
+
 __device__ void ICT4x4(int *iCoeff)
 {
     InvPermute(iCoeff);
@@ -93,10 +98,7 @@ __device__ void ICT4x4(int *iCoeff)
         { 4, 7, 8, 11}
     };
 
-    void (*pointerFunct[8]) (int *arg1, int arg2) = {
-        T2x2H, InvTOdd, InvTOdd, InvTOddOdd,
-        T2x2H, T2x2H, T2x2H, T2x2H
-    };
+
     int arg2Array[8] = { 1, 0, 0, 0, 0, 0, 0, 0};
     int i, j;
 
@@ -219,6 +221,13 @@ __device__ void OverlapPostFilter4(int *iCoeff)
 	iCoeff[1] -= iCoeff[2];
 }
 
+__device__ void (*pointerFunct[17]) (int *arg1, int arg2) = {
+    T2x2H, T2x2H, T2x2H, T2x2H,
+    InvRotate, InvRotate, InvRotate, InvRotate,
+    InvTOddOddPOST, InvScale, InvScale, InvScale, InvScale,
+    T2x2HPOST, T2x2HPOST, T2x2HPOST, T2x2HPOST
+};
+
 __device__ void OverlapPostFilter4x4(int *iCoeff)
 {
 	int arrayLocal[4];
@@ -247,12 +256,7 @@ __device__ void OverlapPostFilter4x4(int *iCoeff)
         { 5, 6, 9, 10}
     };
 
-    __device__ void (*pointerFunct[17]) (int *arg1, int arg2) = {
-        T2x2H, T2x2H, T2x2H, T2x2H,
-        InvRotate, InvRotate, InvRotate, InvRotate,
-        InvTOddOddPOST, InvScale, InvScale, InvScale, InvScale,
-        T2x2HPOST, T2x2HPOST, T2x2HPOST, T2x2HPOST
-    };
+
     int i, j;
 
     for(i = 0; i < 17; i++)
@@ -295,7 +299,7 @@ __global__ void DecFirstStagePostFiltering(float *image, int numRows, int numCol
     }
 }
 
-__global__ void DecSecondStagePostFiltering(int ** image, int numRows, int numCols)
+__global__ void DecSecondStagePostFiltering(int * image, int numRows, int numCols)
 {
     int i, j;
     int arrayLocal[16];
@@ -414,7 +418,7 @@ __global__ void DecFirstStageOverlapFilter(int** image, int numRows, int numCols
     }
 }
 
-__global__ void DecSecondStageOverlapFilter(int **image, int numRows, int numCols)
+__global__ void DecSecondStageOverlapFilter(int *image, int numRows, int numCols)
 {
     int arrayLocal_16[16], arrayLocal_4[4];
     int block_i = blockIdx.x, block_j = blockIdx.y, i;
