@@ -310,8 +310,8 @@ __global__ void EncFirstStageOverlapFilter(int* image, int numRows, int numCols)
     int arrayLocal_16[16], arrayLocal_4[4];
     int block_i = blockIdx.x, block_j = blockIdx.y, i, j;
 
-    numRows /= 4;
-    numCols /= 4;
+    //numRows /= 4;
+    //numCols /= 4;
 /*
     // 4x4 blocks
     for( i = 0; i < 4; i++)
