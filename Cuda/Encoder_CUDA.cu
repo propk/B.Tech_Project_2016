@@ -530,11 +530,11 @@ int main()
     // second stage frequency transform
     EncSecondStageOverlapFilter<<< DimGrid2, 1>>>(imageDevice, imageHeight, imageWidth);
     // first stage pre-filtering
-    //EncFirstStagePreFiltering<<< DimGrid, DimBlock>>>(imageDevice, imageHeight, imageWidth);
+    EncFirstStagePreFiltering<<< DimGrid, DimBlock>>>(imageDevice, imageHeight, imageWidth);
     // first stage frequency transform
-    //EncFirstStageOverlapFilter<<< DimGrid2, 1>>>(imageDevice, imageHeight, imageWidth);
+    EncFirstStageOverlapFilter<<< DimGrid2, 1>>>(imageDevice, imageHeight, imageWidth);
     // second stage pre-filtering
-    //EncSecondStagePreFiltering<<< DimGrid, 1>>>(imageDevice, imageHeight, imageWidth);
+    EncSecondStagePreFiltering<<< DimGrid, 1>>>(imageDevice, imageHeight, imageWidth);
 
     /* kernel function invocation end*/
     cudaDeviceSynchronize();
