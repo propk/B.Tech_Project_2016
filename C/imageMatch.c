@@ -3,7 +3,7 @@
 int main()
 {
     FILE *ip = fopen("encoded.txt", "r");
-    FILE *ip2 = fopen("imfinal.txt", "r");
+    FILE *ip2 = fopen("test.txt", "r");
     FILE *op = fopen("checkFinal.txt", "w");
 
     int i, j, a,b,yo=0;
