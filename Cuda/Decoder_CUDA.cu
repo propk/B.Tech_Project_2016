@@ -329,12 +329,12 @@ __global__ void DecFirstStageOverlapFilter(int** image, int numRows, int numCols
     // 4x4 blocks
     for( i = 0; i < 4; i++)
         for( j = 0; j < 4; j++)
-            arrayLocal_16[i*4+j] = image[(block_i + i)*4][(block_j + j)*4];
+            arrayLocal_16[i*4+j] = image[((block_i + i)*4)*numCols + (block_j + j)*4];
 
     OverlapPostFilter4x4(arrayLocal_16);
     for( i = 0; i < 4; i++)
         for( j = 0; j < 4; j++)
-            image[(block_i + i)*4][(block_j + j)*4] = arrayLocal_16[i*4+j];
+            image[((block_i + i)*4)*numCols + (block_j + j)*4] = arrayLocal_16[i*4+j];
     //4x4 block end
 
     if(block_j == 0)
@@ -343,19 +343,19 @@ __global__ void DecFirstStageOverlapFilter(int** image, int numRows, int numCols
         for(i = 0; i < 2; i++)
         {
             for(j = 0; j < 4; j++)
-                arrayLocal_4[j] = image[(block_i+j)*4][i*4];
+                arrayLocal_4[j] = image[((block_i+j)*4)*numCols + i*4];
             OverlapPostFilter4(arrayLocal_4);
             for(j = 0; j < 4; j++)
-                image[(block_i+j)*4][i*4] = arrayLocal_4[j];
+                image[((block_i+j)*4)*numCols + i*4] = arrayLocal_4[j];
         }
         // right edge
         for(i = numCols-2; i < numCols-2; i++)
         {
             for(j = 0; j < 4; j++)
-                arrayLocal_4[j] = image[(block_i+j)*4][i*4];
+                arrayLocal_4[j] = image[((block_i+j)*4)*numCols + i*4];
             OverlapPostFilter4(arrayLocal_4);
             for(j = 0; j < 4; j++)
-                image[(block_i+j)*4][i*4] = arrayLocal_4[j];
+                image[((block_i+j)*4)*numCols + i*4] = arrayLocal_4[j];
         }
     }
 
@@ -366,51 +366,51 @@ __global__ void DecFirstStageOverlapFilter(int** image, int numRows, int numCols
         for(i = 0; i < 2; i++)
         {
             for(j = 0; j < 4; j++)
-                arrayLocal_4[j] = image[i*4][(block_j+j)*4];
+                arrayLocal_4[j] = image[(i*4)*numCols + (block_j+j)*4];
             OverlapPostFilter4(arrayLocal_4);
             for(j = 0; j < 4; j++)
-                image[i*4][(block_j+j)*4] = arrayLocal_4[j];
+                image[(i*4)*numCols + (block_j+j)*4] = arrayLocal_4[j];
         }
         //bottom edge
         for(i = numRows-2; i < numRows; i++)
         {
             for(j = 0; j < 4; j++)
-                arrayLocal_4[j] = image[i*4][(block_j+j)*4];
+                arrayLocal_4[j] = image[(i*4)*numCols + (block_j+j)*4];
             OverlapPostFilter4(arrayLocal_4);
             for(j = 0; j < 4; j++)
-                image[i*4][(block_j+j)*4] = arrayLocal_4[j];
+                image[(i*4)*numCols + (block_j+j)*4] = arrayLocal_4[j];
         }
     }
 
     if(block_j == 0 && block_i == 0)
     {
         // top left
-        arrayLocal_4[0] = image[0][0], arrayLocal_4[1] = image[0][4];
-        arrayLocal_4[2] = image[4][0], arrayLocal_4[3] = image[4][4];
+        arrayLocal_4[0] = image[(0)*numCols + 0], arrayLocal_4[1] = image[(0)*numCols + 4];
+        arrayLocal_4[2] = image[(4)*numCols + 0], arrayLocal_4[3] = image[(4)*numCols + 4];
         OverlapPostFilter4(arrayLocal_4);
-        image[0][0] = arrayLocal_4[0], image[0][4] = arrayLocal_4[1];
-        image[4][0] = arrayLocal_4[2], image[4][4] = arrayLocal_4[3];
+        image[(0)*numCols + 0] = arrayLocal_4[0], image[(0)*numCols + 4] = arrayLocal_4[1];
+        image[(4)*numCols + 0] = arrayLocal_4[2], image[(4)*numCols + 4] = arrayLocal_4[3];
 
         // top right
-        arrayLocal_4[0] = image[0][(numCols-2)*4], arrayLocal_4[1] = image[0][(numCols-1)*4];
-        arrayLocal_4[2] = image[4][(numCols-2)*4], arrayLocal_4[3] = image[4][(numCols-1)*4];
+        arrayLocal_4[0] = image[(0)*numCols + (numCols-2)*4], arrayLocal_4[1] = image[(0)*numCols + (numCols-1)*4];
+        arrayLocal_4[2] = image[(4)*numCols + (numCols-2)*4], arrayLocal_4[3] = image[(4)*numCols + (numCols-1)*4];
         OverlapPostFilter4(arrayLocal_4);
-        image[0][(numCols-2)*4] = arrayLocal_4[0], image[0][(numCols-1)*4] = arrayLocal_4[1];
-        image[4][(numCols-2)*4] = arrayLocal_4[2], image[4][(numCols-1)*4] = arrayLocal_4[3];
+        image[(0)*numCols + (numCols-2)*4] = arrayLocal_4[0], image[(0)*numCols + (numCols-1)*4] = arrayLocal_4[1];
+        image[(4)*numCols + (numCols-2)*4] = arrayLocal_4[2], image[(4)*numCols + (numCols-1)*4] = arrayLocal_4[3];
 
         // bottom left
-        arrayLocal_4[0] = image[(numRows-2)*4][0], arrayLocal_4[1] = image[(numRows-2)*4][4];
-        arrayLocal_4[2] = image[(numRows-1)*4][0], arrayLocal_4[3] = image[(numRows-1)*4][4];
+        arrayLocal_4[0] = image[((numRows-2)*4)*numCols + 0], arrayLocal_4[1] = image[((numRows-2)*4)*numCols + 4];
+        arrayLocal_4[2] = image[((numRows-1)*4)*numCols + 0], arrayLocal_4[3] = image[((numRows-1)*4)*numCols + 4];
         OverlapPostFilter4(arrayLocal_4);
-        image[(numRows-2)*4][0] = arrayLocal_4[0], image[(numRows-2)*4][4] = arrayLocal_4[1];
-        image[(numRows-1)*4][0] = arrayLocal_4[2], image[(numRows-1)*4][4] = arrayLocal_4[3];
+        image[((numRows-2)*4)*numCols + 0] = arrayLocal_4[0], image[((numRows-2)*4)*numCols + 4] = arrayLocal_4[1];
+        image[((numRows-1)*4)*numCols + 0] = arrayLocal_4[2], image[((numRows-1)*4)*numCols + 4] = arrayLocal_4[3];
 
         // bottom right
-        arrayLocal_4[0] = image[(numRows-2)*4][(numCols-2)*4], arrayLocal_4[1] = image[(numRows-2)*4][(numCols-1)*4];
-        arrayLocal_4[2] = image[(numRows-1)*4][(numCols-2)*4], arrayLocal_4[3] = image[(numRows-1)*4][(numCols-1)*4];
+        arrayLocal_4[0] = image[((numRows-2)*4)*numCols + (numCols-2)*4], arrayLocal_4[1] = image[((numRows-2)*4)*numCols + (numCols-1)*4];
+        arrayLocal_4[2] = image[((numRows-1)*4)*numCols + (numCols-2)*4], arrayLocal_4[3] = image[((numRows-1)*4)*numCols + (numCols-1)*4];
         OverlapPostFilter4(arrayLocal_4);
-        image[(numRows-2)*4][(numCols-2)*4] = arrayLocal_4[0], image[(numRows-2)*4][(numCols-1)*4] = arrayLocal_4[1];
-        image[(numRows-1)*4][(numCols-2)*4] = arrayLocal_4[2], image[(numRows-1)*4][(numCols-1)*4] = arrayLocal_4[3];
+        image[((numRows-2)*4)*numCols + (numCols-2)*4] = arrayLocal_4[0], image[((numRows-2)*4)*numCols + (numCols-1)*4] = arrayLocal_4[1];
+        image[((numRows-1)*4)*numCols + (numCols-2)*4] = arrayLocal_4[2], image[((numRows-1)*4)*numCols + (numCols-1)*4] = arrayLocal_4[3];
     }
 }
 
@@ -423,13 +423,13 @@ __global__ void DecSecondStageOverlapFilter(int **image, int numRows, int numCol
     for( i = 0; i < 4; i++)
     {
         for( j = 0; j < 4; j++)
-            arrayLocal_16[i*4+j] = image[block_i*4 + 2 + i][block_j*4 + 2 + j];
+            arrayLocal_16[i*4+j] = image[(block_i*4 + 2 + i)*numCols + block_j*4 + 2 + j];
     }
     OverlapPostFilter4x4(arrayLocal_16);
     for( i = 0; i < 4; i++)
     {
         for( j = 0; j < 4; j++)
-            image[block_i*4 + 2 + i][block_j*4 + 2 + j] = arrayLocal_16[i*4+j];
+            image[(block_i*4 + 2 + i)*numCols + block_j*4 + 2 + j] = arrayLocal_16[i*4+j];
     }
     //4x4 block end
 
@@ -439,19 +439,19 @@ __global__ void DecSecondStageOverlapFilter(int **image, int numRows, int numCol
         for(i = 0; i < 2; i++)
         {
             for(j = 0; j < 4; j++)
-                arrayLocal_4[j] = image[block_i*4 + 2+j][i];
+                arrayLocal_4[j] = image[(block_i*4 + 2+j)*numCols + i];
             OverlapPostFilter4(arrayLocal_4);
             for(j = 0; j < 4; j++)
-                image[block_i*4 + 2+j][i] = arrayLocal_4[j];
+                image[(block_i*4 + 2+j)*numCols + i] = arrayLocal_4[j];
         }
         // right edge
         for(i = numCols-2; i < numCols; i++)
         {
             for(j = 0; j < 4; j++)
-                arrayLocal_4[j] = image[block_i*4 + 2 + j][i];
+                arrayLocal_4[j] = image[(block_i*4 + 2 + j)*numCols + i];
             OverlapPostFilter4(arrayLocal_4);
             for(j = 0; j < 4; j++)
-                image[block_i*4 + 2+j][i] = arrayLocal_4[j];
+                image[(block_i*4 + 2+j)*numCols + i] = arrayLocal_4[j];
         }
     }
 
@@ -462,51 +462,51 @@ __global__ void DecSecondStageOverlapFilter(int **image, int numRows, int numCol
         for(i = 0; i < 2; i++)
         {
             for(j = 0; j < 4; j++)
-                arrayLocal_4[j] = image[i][block_j*4 + 2+j];
+                arrayLocal_4[j] = image[(i)*numCols + block_j*4 + 2+j];
             OverlapPostFilter4(arrayLocal_4);
             for(j = 0; j < 4; j++)
-                image[i][block_j+j*4 + 2] = arrayLocal_4[j];
+                image[(i)*numCols + block_j+j*4 + 2] = arrayLocal_4[j];
         }
         //bottom edge
         for(i = numRows-2; i < numRows; i++)
         {
             for(j = 0; j < 4; j++)
-                arrayLocal_4[j] = image[i][block_j*4 + 2 + j];
+                arrayLocal_4[j] = image[(i)*numCols + block_j*4 + 2 + j];
             OverlapPostFilter4(arrayLocal_4);
             for(j = 0; j < 4; j++)
-                image[i][block_j*4 + 2 + j] = arrayLocal_4[j];
+                image[(i)*numCols + block_j*4 + 2 + j] = arrayLocal_4[j];
         }
     }
 
     if(block_i == 0 && block_j == 0)
     {
         // top left
-        arrayLocal_4[0] = image[0][0], arrayLocal_4[1] = image[0][1];
-        arrayLocal_4[2] = image[1][0], arrayLocal_4[2] = image[1][1];
+        arrayLocal_4[0] = image[(0)*numCols + 0], arrayLocal_4[1] = image[(0)*numCols + 1];
+        arrayLocal_4[2] = image[(1)*numCols + 0], arrayLocal_4[2] = image[(1)*numCols + 1];
         OverlapPostFilter4(arrayLocal_4);
-        image[0][0] = arrayLocal_4[0], image[0][1] = arrayLocal_4[1];
-        image[1][0] = arrayLocal_4[2], image[1][1] = arrayLocal_4[2];
+        image[(0)*numCols + 0] = arrayLocal_4[0], image[(0)*numCols + 1] = arrayLocal_4[1];
+        image[(1)*numCols + 0] = arrayLocal_4[2], image[(1)*numCols + 1] = arrayLocal_4[2];
 
         // top right
-        arrayLocal_4[0] = image[0][numCols-2], arrayLocal_4[1] = image[0][numCols-1];
-        arrayLocal_4[2] = image[1][numCols-2], arrayLocal_4[2] = image[1][numCols-1];
+        arrayLocal_4[0] = image[(0)*numCols + numCols-2], arrayLocal_4[1] = image[(0)*numCols + numCols-1];
+        arrayLocal_4[2] = image[(1)*numCols + numCols-2], arrayLocal_4[2] = image[(1)*numCols + numCols-1];
         OverlapPostFilter4(arrayLocal_4);
-        image[0][numCols-2] = arrayLocal_4[0], image[0][numCols-1] = arrayLocal_4[1];
-        image[1][numCols-2] = arrayLocal_4[2], image[1][numCols-1] = arrayLocal_4[2];
+        image[(0)*numCols + numCols-2] = arrayLocal_4[0], image[(0)*numCols + numCols-1] = arrayLocal_4[1];
+        image[(1)*numCols + numCols-2] = arrayLocal_4[2], image[(1)*numCols + numCols-1] = arrayLocal_4[2];
 
         // bottom left
-        arrayLocal_4[0] = image[numRows-2][0], arrayLocal_4[1] = image[numRows-2][1];
-        arrayLocal_4[2] = image[numRows-1][0], arrayLocal_4[2] = image[numRows-1][1];
+        arrayLocal_4[0] = image[(numRows-2)*numCols + 0], arrayLocal_4[1] = image[(numRows-2)*numCols + 1];
+        arrayLocal_4[2] = image[(numRows-1)*numCols + 0], arrayLocal_4[2] = image[(numRows-1)*numCols + 1];
         OverlapPostFilter4(arrayLocal_4);
-        image[numRows-2][0] = arrayLocal_4[0], image[numRows-2][1] = arrayLocal_4[1];
-        image[numRows-1][0] = arrayLocal_4[2], image[numRows-1][1] = arrayLocal_4[2];
+        image[(numRows-2)*numCols + 0] = arrayLocal_4[0], image[(numRows-2)*numCols + 1] = arrayLocal_4[1];
+        image[(numRows-1)*numCols + 0] = arrayLocal_4[2], image[(numRows-1)*numCols + 1] = arrayLocal_4[2];
 
         // bottom right
-        arrayLocal_4[0] = image[numRows-2][numCols-2], arrayLocal_4[1] = image[numRows-2][numCols-1];
-        arrayLocal_4[2] = image[numRows-1][numCols-2], arrayLocal_4[2] = image[numRows-1][numCols-1];
+        arrayLocal_4[0] = image[(numRows-2)*numCols + numCols-2], arrayLocal_4[1] = image[(numRows-2)*numCols + numCols-1];
+        arrayLocal_4[2] = image[(numRows-1)*numCols + numCols-2], arrayLocal_4[2] = image[(numRows-1)*numCols + numCols-1];
         OverlapPostFilter4(arrayLocal_4);
-        image[numRows-2][numCols-2] = arrayLocal_4[0], image[numRows-2][numCols-1] = arrayLocal_4[1];
-        image[numRows-1][numCols-2] = arrayLocal_4[2], image[numRows-1][numCols-1] = arrayLocal_4[2];
+        image[(numRows-2)*numCols + numCols-2] = arrayLocal_4[0], image[(numRows-2)*numCols + numCols-1] = arrayLocal_4[1];
+        image[(numRows-1)*numCols + numCols-2] = arrayLocal_4[2], image[(numRows-1)*numCols + numCols-1] = arrayLocal_4[2];
     }
 }
 
