@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
+#include <sys/time.h>
 //__global__ int *arrayLocal_16, *arrayLocal_4;
 
 __device__ void T2x2H(int *iCoeff, int valRound)
@@ -500,10 +500,8 @@ __global__ void EncSecondStageOverlapFilter(int* image, int numRows, int numCols
 
 int main()
 {
-    cudaEvent_t start, stop;
-    cudaEventCreate(&start);
-    cudaEventCreate(&stop);
-    cudaEventRecord(start);
+    struct timeval stop, start;
+    gettimeofday(&start, NULL);
     FILE *ip = fopen("image.txt", "r");
     FILE *op = fopen("encoded.txt", "w");
     //printf("1\n");
@@ -538,16 +536,13 @@ int main()
     // second stage pre-filtering
     EncSecondStagePreFiltering<<< DimGrid, 1>>>(imageDevice, imageHeight, imageWidth);
 
-    cudaEventRecord(stop);
-
     /* kernel function invocation end*/
     cudaDeviceSynchronize();
     // copy from device to host
     cudaMemcpy(image, imageDevice, size, cudaMemcpyDeviceToHost);
 
-    cudaEventSynchronize(stop);
-    float milliseconds = 0;
-    cudaEventElapsedTime(&milliseconds, start, stop);
+    gettimeofday(&stop, NULL);
+    printf("took %lu\n", stop.tv_usec - start.tv_usec);
 
     //free device memory
     cudaFree(imageDevice);
@@ -559,7 +554,6 @@ int main()
             fprintf(op, "%d ", image[i][j] );
         fprintf(op, "\n");
     }
-    printf("%f", milliseconds);
     printf("Completed");
     fclose(ip);
     fclose(op);
