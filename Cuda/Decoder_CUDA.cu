@@ -78,7 +78,7 @@ __device__ void T2pt(int *iCoeff)
     iCoeff[1] += iCoeff[0];
 }
 
-void (*pointerFunct[8]) (int *arg1, int arg2) = {
+__device__ void (*pointerFunct[8]) (int *arg1, int arg2) = {
     T2x2H, InvTOdd, InvTOdd, InvTOddOdd,
     T2x2H, T2x2H, T2x2H, T2x2H
 };
@@ -273,7 +273,7 @@ __device__ void OverlapPostFilter4x4(int *iCoeff)
     }
 }
 
-__global__ void DecFirstStagePostFiltering(float *image, int numRows, int numCols)
+__global__ void DecFirstStagePostFiltering(int *image, int numRows, int numCols)
 {
     int i, j;
     int arrayLocal[16];
@@ -322,23 +322,23 @@ __global__ void DecSecondStagePostFiltering(int * image, int numRows, int numCol
     }
 }
 
-__global__ void DecFirstStageOverlapFilter(int** image, int numRows, int numCols)
+__global__ void DecFirstStageOverlapFilter(int* image, int numRows, int numCols)
 {
     int arrayLocal_16[16], arrayLocal_4[4];
     int block_i = blockIdx.x, block_j = blockIdx.y, i, j;
 
-    numRows /= 4;
-    numCols /= 4;
+    //numRows /= 4;
+    //numCols /= 4;
 
     // 4x4 blocks
     for( i = 0; i < 4; i++)
         for( j = 0; j < 4; j++)
-            arrayLocal_16[i*4+j] = image[((block_i + i)*4)*numCols + (block_j + j)*4];
+            arrayLocal_16[i*4+j] = image[((block_i*4 + i + 2)*4)*numCols + (block_j*4 + j + 2)*4];
 
     OverlapPostFilter4x4(arrayLocal_16);
     for( i = 0; i < 4; i++)
         for( j = 0; j < 4; j++)
-            image[((block_i + i)*4)*numCols + (block_j + j)*4] = arrayLocal_16[i*4+j];
+            image[((block_i*4 + i + 2)*4)*numCols + (block_j*4 + j + 2)*4] = arrayLocal_16[i*4+j];
     //4x4 block end
 
     if(block_j == 0)
@@ -347,19 +347,19 @@ __global__ void DecFirstStageOverlapFilter(int** image, int numRows, int numCols
         for(i = 0; i < 2; i++)
         {
             for(j = 0; j < 4; j++)
-                arrayLocal_4[j] = image[((block_i+j)*4)*numCols + i*4];
+                arrayLocal_4[j] = image[((block_i*4+j+2)*4)*numCols + i*4];
             OverlapPostFilter4(arrayLocal_4);
             for(j = 0; j < 4; j++)
-                image[((block_i+j)*4)*numCols + i*4] = arrayLocal_4[j];
+                image[((block_i*4+j+2)*4)*numCols + i*4] = arrayLocal_4[j];
         }
         // right edge
-        for(i = numCols-2; i < numCols-2; i++)
+        for(i = numCols/4-2; i < numCols/4; i++)
         {
             for(j = 0; j < 4; j++)
-                arrayLocal_4[j] = image[((block_i+j)*4)*numCols + i*4];
+                arrayLocal_4[j] = image[((block_i*4+j+2)*4)*numCols + i*4];
             OverlapPostFilter4(arrayLocal_4);
             for(j = 0; j < 4; j++)
-                image[((block_i+j)*4)*numCols + i*4] = arrayLocal_4[j];
+                image[((block_i*4+j+2)*4)*numCols + i*4] = arrayLocal_4[j];
         }
     }
 
@@ -370,19 +370,19 @@ __global__ void DecFirstStageOverlapFilter(int** image, int numRows, int numCols
         for(i = 0; i < 2; i++)
         {
             for(j = 0; j < 4; j++)
-                arrayLocal_4[j] = image[(i*4)*numCols + (block_j+j)*4];
+                arrayLocal_4[j] = image[(i*4)*numCols + (block_j*4+j+2)*4];
             OverlapPostFilter4(arrayLocal_4);
             for(j = 0; j < 4; j++)
-                image[(i*4)*numCols + (block_j+j)*4] = arrayLocal_4[j];
+                image[(i*4)*numCols + (block_j*4+j+2)*4] = arrayLocal_4[j];
         }
         //bottom edge
-        for(i = numRows-2; i < numRows; i++)
+        for(i = numRows/4-2; i < numRows/4; i++)
         {
             for(j = 0; j < 4; j++)
-                arrayLocal_4[j] = image[(i*4)*numCols + (block_j+j)*4];
+                arrayLocal_4[j] = image[(i*4)*numCols + (block_j*4+2+j)*4];
             OverlapPostFilter4(arrayLocal_4);
             for(j = 0; j < 4; j++)
-                image[(i*4)*numCols + (block_j+j)*4] = arrayLocal_4[j];
+                image[(i*4)*numCols + (block_j*4+j+2)*4] = arrayLocal_4[j];
         }
     }
 
@@ -396,38 +396,38 @@ __global__ void DecFirstStageOverlapFilter(int** image, int numRows, int numCols
         image[(4)*numCols + 0] = arrayLocal_4[2], image[(4)*numCols + 4] = arrayLocal_4[3];
 
         // top right
-        arrayLocal_4[0] = image[(0)*numCols + (numCols-2)*4], arrayLocal_4[1] = image[(0)*numCols + (numCols-1)*4];
-        arrayLocal_4[2] = image[(4)*numCols + (numCols-2)*4], arrayLocal_4[3] = image[(4)*numCols + (numCols-1)*4];
+        arrayLocal_4[0] = image[(0)*numCols + (numCols/4-2)*4], arrayLocal_4[1] = image[(0)*numCols + (numCols/4-1)*4];
+        arrayLocal_4[2] = image[(4)*numCols + (numCols/4-2)*4], arrayLocal_4[3] = image[(4)*numCols + (numCols/4-1)*4];
         OverlapPostFilter4(arrayLocal_4);
-        image[(0)*numCols + (numCols-2)*4] = arrayLocal_4[0], image[(0)*numCols + (numCols-1)*4] = arrayLocal_4[1];
-        image[(4)*numCols + (numCols-2)*4] = arrayLocal_4[2], image[(4)*numCols + (numCols-1)*4] = arrayLocal_4[3];
+        image[(0)*numCols + (numCols/4-2)*4] = arrayLocal_4[0], image[(0)*numCols + (numCols/4-1)*4] = arrayLocal_4[1];
+        image[(4)*numCols + (numCols/4-2)*4] = arrayLocal_4[2], image[(4)*numCols + (numCols/4-1)*4] = arrayLocal_4[3];
 
         // bottom left
-        arrayLocal_4[0] = image[((numRows-2)*4)*numCols + 0], arrayLocal_4[1] = image[((numRows-2)*4)*numCols + 4];
-        arrayLocal_4[2] = image[((numRows-1)*4)*numCols + 0], arrayLocal_4[3] = image[((numRows-1)*4)*numCols + 4];
+        arrayLocal_4[0] = image[((numRows/4-2)*4)*numCols + 0], arrayLocal_4[1] = image[((numRows/4-2)*4)*numCols + 4];
+        arrayLocal_4[2] = image[((numRows/4-1)*4)*numCols + 0], arrayLocal_4[3] = image[((numRows/4-1)*4)*numCols + 4];
         OverlapPostFilter4(arrayLocal_4);
-        image[((numRows-2)*4)*numCols + 0] = arrayLocal_4[0], image[((numRows-2)*4)*numCols + 4] = arrayLocal_4[1];
-        image[((numRows-1)*4)*numCols + 0] = arrayLocal_4[2], image[((numRows-1)*4)*numCols + 4] = arrayLocal_4[3];
+        image[((numRows/4-2)*4)*numCols + 0] = arrayLocal_4[0], image[((numRows/4-2)*4)*numCols + 4] = arrayLocal_4[1];
+        image[((numRows/4-1)*4)*numCols + 0] = arrayLocal_4[2], image[((numRows/4-1)*4)*numCols + 4] = arrayLocal_4[3];
 
         // bottom right
-        arrayLocal_4[0] = image[((numRows-2)*4)*numCols + (numCols-2)*4], arrayLocal_4[1] = image[((numRows-2)*4)*numCols + (numCols-1)*4];
-        arrayLocal_4[2] = image[((numRows-1)*4)*numCols + (numCols-2)*4], arrayLocal_4[3] = image[((numRows-1)*4)*numCols + (numCols-1)*4];
+        arrayLocal_4[0] = image[((numRows/4-2)*4)*numCols + (numCols/4-2)*4], arrayLocal_4[1] = image[((numRows/4-2)*4)*numCols + (numCols/4-1)*4];
+        arrayLocal_4[2] = image[((numRows/4-1)*4)*numCols + (numCols/4-2)*4], arrayLocal_4[3] = image[((numRows/4-1)*4)*numCols + (numCols/4-1)*4];
         OverlapPostFilter4(arrayLocal_4);
-        image[((numRows-2)*4)*numCols + (numCols-2)*4] = arrayLocal_4[0], image[((numRows-2)*4)*numCols + (numCols-1)*4] = arrayLocal_4[1];
-        image[((numRows-1)*4)*numCols + (numCols-2)*4] = arrayLocal_4[2], image[((numRows-1)*4)*numCols + (numCols-1)*4] = arrayLocal_4[3];
+        image[((numRows/4-2)*4)*numCols + (numCols/4-2)*4] = arrayLocal_4[0], image[((numRows/4-2)*4)*numCols + (numCols/4-1)*4] = arrayLocal_4[1];
+        image[((numRows/4-1)*4)*numCols + (numCols/4-2)*4] = arrayLocal_4[2], image[((numRows/4-1)*4)*numCols + (numCols/4-1)*4] = arrayLocal_4[3];
     }
 }
 
 __global__ void DecSecondStageOverlapFilter(int *image, int numRows, int numCols)
 {
     int arrayLocal_16[16], arrayLocal_4[4];
-    int block_i = blockIdx.x, block_j = blockIdx.y, i;
+    int block_i = blockIdx.x, block_j = blockIdx.y, i, j;
 
     // 4x4 blocks
     for( i = 0; i < 4; i++)
     {
         for( j = 0; j < 4; j++)
-            arrayLocal_16[i*4+j] = image[(block_i*4 + 2 + i)*numCols + block_j*4 + 2 + j];
+            arrayLocal_16[i*4+j] = image[ (block_i*4 + 2 + i)*numCols + block_j*4 + 2 + j];
     }
     OverlapPostFilter4x4(arrayLocal_16);
     for( i = 0; i < 4; i++)
@@ -469,7 +469,7 @@ __global__ void DecSecondStageOverlapFilter(int *image, int numRows, int numCols
                 arrayLocal_4[j] = image[(i)*numCols + block_j*4 + 2+j];
             OverlapPostFilter4(arrayLocal_4);
             for(j = 0; j < 4; j++)
-                image[(i)*numCols + block_j+j*4 + 2] = arrayLocal_4[j];
+                image[(i)*numCols + block_j*4 + 2+j] = arrayLocal_4[j];
         }
         //bottom edge
         for(i = numRows-2; i < numRows; i++)
@@ -486,31 +486,31 @@ __global__ void DecSecondStageOverlapFilter(int *image, int numRows, int numCols
     {
         // top left
         arrayLocal_4[0] = image[(0)*numCols + 0], arrayLocal_4[1] = image[(0)*numCols + 1];
-        arrayLocal_4[2] = image[(1)*numCols + 0], arrayLocal_4[2] = image[(1)*numCols + 1];
+        arrayLocal_4[2] = image[(1)*numCols + 0], arrayLocal_4[3] = image[(1)*numCols + 1];
         OverlapPostFilter4(arrayLocal_4);
         image[(0)*numCols + 0] = arrayLocal_4[0], image[(0)*numCols + 1] = arrayLocal_4[1];
-        image[(1)*numCols + 0] = arrayLocal_4[2], image[(1)*numCols + 1] = arrayLocal_4[2];
+        image[(1)*numCols + 0] = arrayLocal_4[2], image[(1)*numCols + 1] = arrayLocal_4[3];
 
         // top right
         arrayLocal_4[0] = image[(0)*numCols + numCols-2], arrayLocal_4[1] = image[(0)*numCols + numCols-1];
-        arrayLocal_4[2] = image[(1)*numCols + numCols-2], arrayLocal_4[2] = image[(1)*numCols + numCols-1];
+        arrayLocal_4[2] = image[(1)*numCols + numCols-2], arrayLocal_4[3] = image[(1)*numCols + numCols-1];
         OverlapPostFilter4(arrayLocal_4);
         image[(0)*numCols + numCols-2] = arrayLocal_4[0], image[(0)*numCols + numCols-1] = arrayLocal_4[1];
-        image[(1)*numCols + numCols-2] = arrayLocal_4[2], image[(1)*numCols + numCols-1] = arrayLocal_4[2];
+        image[(1)*numCols + numCols-2] = arrayLocal_4[2], image[(1)*numCols + numCols-1] = arrayLocal_4[3];
 
         // bottom left
         arrayLocal_4[0] = image[(numRows-2)*numCols + 0], arrayLocal_4[1] = image[(numRows-2)*numCols + 1];
-        arrayLocal_4[2] = image[(numRows-1)*numCols + 0], arrayLocal_4[2] = image[(numRows-1)*numCols + 1];
+        arrayLocal_4[2] = image[(numRows-1)*numCols + 0], arrayLocal_4[3] = image[(numRows-1)*numCols + 1];
         OverlapPostFilter4(arrayLocal_4);
         image[(numRows-2)*numCols + 0] = arrayLocal_4[0], image[(numRows-2)*numCols + 1] = arrayLocal_4[1];
-        image[(numRows-1)*numCols + 0] = arrayLocal_4[2], image[(numRows-1)*numCols + 1] = arrayLocal_4[2];
+        image[(numRows-1)*numCols + 0] = arrayLocal_4[2], image[(numRows-1)*numCols + 1] = arrayLocal_4[3];
 
         // bottom right
         arrayLocal_4[0] = image[(numRows-2)*numCols + numCols-2], arrayLocal_4[1] = image[(numRows-2)*numCols + numCols-1];
-        arrayLocal_4[2] = image[(numRows-1)*numCols + numCols-2], arrayLocal_4[2] = image[(numRows-1)*numCols + numCols-1];
+        arrayLocal_4[2] = image[(numRows-1)*numCols + numCols-2], arrayLocal_4[3] = image[(numRows-1)*numCols + numCols-1];
         OverlapPostFilter4(arrayLocal_4);
         image[(numRows-2)*numCols + numCols-2] = arrayLocal_4[0], image[(numRows-2)*numCols + numCols-1] = arrayLocal_4[1];
-        image[(numRows-1)*numCols + numCols-2] = arrayLocal_4[2], image[(numRows-1)*numCols + numCols-1] = arrayLocal_4[2];
+        image[(numRows-1)*numCols + numCols-2] = arrayLocal_4[2], image[(numRows-1)*numCols + numCols-1] = arrayLocal_4[3];
     }
 }
 
@@ -518,19 +518,19 @@ __global__ void DecSecondStageOverlapFilter(int *image, int numRows, int numCols
 int main()
 {
     // read image in host
-    int imageWidth, imageHeight;
-    scanf("%d %d", &imageHeight, &imageWidth);
-    int **image = (int**) malloc(imageHeight * sizeof(int*) );
+    int imageWidth = 112, imageHeight = 128;
+    //scanf("%d %d", &imageHeight, &imageWidth);
+    int image[128][112]; // = (int**) malloc(imageHeight * sizeof(int*) );
     int i, j;
     for(i = 0; i < imageHeight; i++){
-        image[i] = (int*) malloc(imageWidth * sizeof(int) );
+        //image[i] = (int*) malloc(imageWidth * sizeof(int) );
 
         for(j = 0; j < imageWidth; j++)
             scanf( "%d", &image[i][j]);
     }
 
     // allocate & copy image memory in device
-    float *imageDevice;
+    int *imageDevice;
     int size = imageWidth * imageHeight * sizeof(int);
     cudaMalloc((void**) &imageDevice, size );
     cudaMemcpy(imageDevice, image, size, cudaMemcpyHostToDevice);
@@ -539,11 +539,11 @@ int main()
     dim3 DimGrid(imageHeight/16, imageWidth/16);
     dim3 DimBlock(4, 4);
     dim3 DimGrid2(imageHeight/4-1, imageWidth/4-1);
-
+    dim3 DimGrid3(imageHeight/16-1, imageWidth/16-1);
     // second stage Post-filtering
     DecSecondStagePostFiltering<<< DimGrid, 1>>>(imageDevice, imageHeight, imageWidth);
     // first stage frequency transform
-    DecFirstStageOverlapFilter<<< DimGrid2, 1>>>(imageDevice, imageHeight, imageWidth);
+    DecFirstStageOverlapFilter<<< DimGrid3, 1>>>(imageDevice, imageHeight, imageWidth);
     // first stage Post-filtering
     DecFirstStagePostFiltering<<< DimGrid, DimBlock>>>(imageDevice, imageHeight, imageWidth);
     // second stage frequency transform
