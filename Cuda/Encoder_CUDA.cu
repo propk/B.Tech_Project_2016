@@ -553,7 +553,6 @@ int main()
     }
     gettimeofday(&stop, NULL);
     printf("took");
-    printf("Completed");
     fclose(ip);
     fclose(op);
 
