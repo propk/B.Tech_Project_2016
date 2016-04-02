@@ -501,7 +501,7 @@ __global__ void EncSecondStageOverlapFilter(int* image, int numRows, int numCols
 int main()
 {
     struct timeval stop, start;
-    gettimeofday(&start, NULL);
+    
     FILE *ip = fopen("image.txt", "r");
     FILE *op = fopen("encoded.txt", "w");
     //printf("1\n");
@@ -527,6 +527,7 @@ int main()
     dim3 DimBlock(4, 4);
     dim3 DimGrid2(imageHeight/4-1, imageWidth/4-1);
     dim3 DimGrid3(imageHeight/16-1, imageWidth/16-1);
+    gettimeofday(&start, NULL);
     // second stage frequency transform
     EncSecondStageOverlapFilter<<< DimGrid2, 1>>>(imageDevice, imageHeight, imageWidth);
     // first stage pre-filtering
@@ -538,6 +539,7 @@ int main()
 
     /* kernel function invocation end*/
     cudaDeviceSynchronize();
+    gettimeofday(&stop, NULL);
     // copy from device to host
     cudaMemcpy(image, imageDevice, size, cudaMemcpyDeviceToHost);
 
@@ -551,7 +553,7 @@ int main()
             fprintf(op, "%d ", image[i][j] );
         fprintf(op, "\n");
     }
-    gettimeofday(&stop, NULL);
+    
     printf("took %lu\n", stop.tv_usec - start.tv_usec);
     printf("took %lu\n", stop.tv_sec - start.tv_sec);
     fclose(ip);
