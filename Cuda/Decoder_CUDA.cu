@@ -566,7 +566,6 @@ int main()
             fprintf(op, "%d ", image[i][j] );
         fprintf(op, "\n");
     }
-    printf("Completed");
     fclose(ip);
     fclose(op);
     return 0;
