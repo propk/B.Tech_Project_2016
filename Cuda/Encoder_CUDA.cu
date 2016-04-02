@@ -548,7 +548,6 @@ int main()
     cudaEventSynchronize(stop);
     float milliseconds = 0;
     cudaEventElapsedTime(&milliseconds, start, stop);
-    printf("%f", milliseconds);
 
     //free device memory
     cudaFree(imageDevice);
@@ -560,6 +559,7 @@ int main()
             fprintf(op, "%d ", image[i][j] );
         fprintf(op, "\n");
     }
+    printf("%f", milliseconds);
     printf("Completed");
     fclose(ip);
     fclose(op);
