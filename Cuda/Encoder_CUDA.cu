@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <time.h>
 //__global__ int *arrayLocal_16, *arrayLocal_4;
 
 __device__ void T2x2H(int *iCoeff, int valRound)
@@ -500,8 +500,12 @@ __global__ void EncSecondStageOverlapFilter(int* image, int numRows, int numCols
 
 int main()
 {
+    double t[100];
+    int tim = 0;
+    t[tim] = myCPUTimer(); tim++;
     FILE *ip = fopen("image.txt", "r");
     FILE *op = fopen("encoded.txt", "w");
+    t[tim] = myCPUTimer(); tim++;
     //printf("1\n");
     // read image in host
     int imageWidth = 112, imageHeight=128;
@@ -515,13 +519,13 @@ int main()
         for(j = 0; j < imageWidth; j++)
             fscanf(ip, "%d", &image[i][j]);
     }
-
+    t[tim] = myCPUTimer(); tim++;
     // allocate & copy image memory in device
     int *imageDevice;
     size_t size = imageWidth * imageHeight * sizeof(int);
     cudaMalloc((void**) &imageDevice, size );
     cudaMemcpy(imageDevice, image, size, cudaMemcpyHostToDevice);
-
+    t[tim] = myCPUTimer(); tim++;
     /* kernel invocation start*/
     dim3 DimGrid(imageHeight/16, imageWidth/16);
     dim3 DimBlock(4, 4);
@@ -540,7 +544,8 @@ int main()
     cudaDeviceSynchronize();
     // copy from device to host
     cudaMemcpy(image, imageDevice, size, cudaMemcpyDeviceToHost);
-
+    for(i = 0; i < tim; i++)
+        printf("%lf, ", t[i]);
 
     //free device memory
     cudaFree(imageDevice);
