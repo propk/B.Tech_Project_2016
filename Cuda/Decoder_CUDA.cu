@@ -518,6 +518,8 @@ __global__ void DecSecondStageOverlapFilter(int *image, int numRows, int numCols
 int main()
 {
     // read image in host
+    FILE *ip = fopen("encoded.txt", "r");
+    FILE *op = fopen("decoded.txt", "w");
     int imageWidth = 112, imageHeight = 128;
     //scanf("%d %d", &imageHeight, &imageWidth);
     int image[128][112]; // = (int**) malloc(imageHeight * sizeof(int*) );
@@ -526,7 +528,7 @@ int main()
         //image[i] = (int*) malloc(imageWidth * sizeof(int) );
 
         for(j = 0; j < imageWidth; j++)
-            scanf( "%d", &image[i][j]);
+            fscanf(ip, "%d", &image[i][j]);
     }
 
     // allocate & copy image memory in device
@@ -550,7 +552,7 @@ int main()
     DecSecondStageOverlapFilter<<< DimGrid2, 1>>>(imageDevice, imageHeight, imageWidth);
 
     /* kernel function invocation end */
-
+    cudaDeviceSynchronize();
     // copy from device to host
     cudaMemcpy(image, imageDevice, size, cudaMemcpyDeviceToHost);
 
@@ -561,9 +563,11 @@ int main()
     for( i = 0; i < imageHeight; i++)
     {
         for( j = 0; j < imageWidth; j++)
-            fprintf(out, "%d ", image[i][j] );
-        fprintf(out, "\n");
+            fprintf(op, "%d ", image[i][j] );
+        fprintf(op, "\n");
     }
-
+    printf("Completed");
+    fclose(ip);
+    fclose(op);
     return 0;
 }
