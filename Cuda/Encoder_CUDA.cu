@@ -541,9 +541,6 @@ int main()
     // copy from device to host
     cudaMemcpy(image, imageDevice, size, cudaMemcpyDeviceToHost);
 
-    gettimeofday(&stop, NULL);
-    printf("took %lu\n", stop.tv_usec - start.tv_usec);
-
     //free device memory
     cudaFree(imageDevice);
 
@@ -554,6 +551,8 @@ int main()
             fprintf(op, "%d ", image[i][j] );
         fprintf(op, "\n");
     }
+    gettimeofday(&stop, NULL);
+    printf("took %lu\n", stop.tv_usec - start.tv_usec);
     printf("Completed");
     fclose(ip);
     fclose(op);
