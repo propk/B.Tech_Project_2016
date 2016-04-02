@@ -221,7 +221,7 @@ __device__ void OverlapPostFilter4(int *iCoeff)
 	iCoeff[1] -= iCoeff[2];
 }
 
-__device__ void (*pointerFunct[17]) (int *arg1, int arg2) = {
+__device__ void (*pointerFunct2[17]) (int *arg1, int arg2) = {
     T2x2H, T2x2H, T2x2H, T2x2H,
     InvRotate, InvRotate, InvRotate, InvRotate,
     InvTOddOddPOST, InvScale, InvScale, InvScale, InvScale,
@@ -265,7 +265,7 @@ __device__ void OverlapPostFilter4x4(int *iCoeff)
             if(arrayTemp[i][j] >= 0)
                 arrayLocal[j] = iCoeff[arrayTemp[i][j]];
 
-        (*pointerFunct[i]) (arrayLocal, 0);
+        (*pointerFunct2[i]) (arrayLocal, 0);
 
         for(j = 0; j < 4; j++)
             if(arrayTemp[i][j] >= 0)
