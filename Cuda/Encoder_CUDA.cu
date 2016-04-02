@@ -552,7 +552,7 @@ int main()
         fprintf(op, "\n");
     }
     gettimeofday(&stop, NULL);
-    printf("took");
+    printf("took %lu\n", stop.tv_usec - start.tv_usec");
     fclose(ip);
     fclose(op);
 
