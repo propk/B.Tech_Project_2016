@@ -500,11 +500,15 @@ __global__ void EncSecondStageOverlapFilter(int* image, int numRows, int numCols
 
 int main()
 {
-    struct timeval stop, start;
-    
+    struct timeval tim[50];
+    int t = 0;
+
+    FILE *time_log = fopen("timing_log.txt", "w");
+
+    gettimeofday(&tim[t], NULL); t++;
     FILE *ip = fopen("image.txt", "r");
     FILE *op = fopen("encoded.txt", "w");
-    //printf("1\n");
+
     // read image in host
     int imageWidth = 112, imageHeight=128;
     //scanf("%d %d", &imageHeight, &imageWidth);
@@ -517,34 +521,48 @@ int main()
         for(j = 0; j < imageWidth; j++)
             fscanf(ip, "%d", &image[i][j]);
     }
+    gettimeofday(&tim[t], NULL); t++;
+
     // allocate & copy image memory in device
     int *imageDevice;
     size_t size = imageWidth * imageHeight * sizeof(int);
     cudaMalloc((void**) &imageDevice, size );
     cudaMemcpy(imageDevice, image, size, cudaMemcpyHostToDevice);
+
     /* kernel invocation start*/
     dim3 DimGrid(imageHeight/16, imageWidth/16);
     dim3 DimBlock(4, 4);
     dim3 DimGrid2(imageHeight/4-1, imageWidth/4-1);
     dim3 DimGrid3(imageHeight/16-1, imageWidth/16-1);
-    gettimeofday(&start, NULL);
+
+    gettimeofday(&tim[t], NULL); t++;
+
     // second stage frequency transform
     EncSecondStageOverlapFilter<<< DimGrid2, 1>>>(imageDevice, imageHeight, imageWidth);
+    gettimeofday(&tim[t], NULL); t++;
+
     // first stage pre-filtering
     EncFirstStagePreFiltering<<< DimGrid, DimBlock>>>(imageDevice, imageHeight, imageWidth);
+    gettimeofday(&tim[t], NULL); t++;
+
     // first stage frequency transform
     EncFirstStageOverlapFilter<<< DimGrid3, 1>>>(imageDevice, imageHeight, imageWidth);
+    gettimeofday(&tim[t], NULL); t++;
+
     // second stage pre-filtering
     EncSecondStagePreFiltering<<< DimGrid, 1>>>(imageDevice, imageHeight, imageWidth);
+    gettimeofday(&tim[t], NULL); t++;
 
     /* kernel function invocation end*/
     cudaDeviceSynchronize();
-    gettimeofday(&stop, NULL);
+    gettimeofday(&tim[t], NULL); t++;
+
     // copy from device to host
     cudaMemcpy(image, imageDevice, size, cudaMemcpyDeviceToHost);
 
     //free device memory
     cudaFree(imageDevice);
+    gettimeofday(&tim[t], NULL); t++;
 
     //store processed image in file
     for( i = 0; i < imageHeight; i++)
@@ -553,11 +571,31 @@ int main()
             fprintf(op, "%d ", image[i][j] );
         fprintf(op, "\n");
     }
-    
-    printf("took %lu\n", stop.tv_usec - start.tv_usec);
-    printf("took %lu\n", stop.tv_sec - start.tv_sec);
+    gettimeofday(&tim[t], NULL); t++;
+
+    //time logs
+    i = 0;
+
+    fprintf(time_log, "Image Read from file: %lu seconds %lu microseconds\n", tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec);
+    i++;
+    fprintf(time_log, "Image Copy To Device: %lu seconds %lu microseconds\n", tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec);
+    i++;
+    fprintf(time_log, "Stage 1: %lu seconds %lu microseconds\n", tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec);
+    i++;
+    fprintf(time_log, "Stage 2: %lu seconds %lu microseconds\n", tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec);
+    i++;
+    fprintf(time_log, "Stage 3: %lu seconds %lu microseconds\n", tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec);
+    i++;
+    fprintf(time_log, "Stage 4: %lu seconds %lu microseconds\n", tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec);
+    i++;
+    fprintf(time_log, "Cuda Device Synchronise: %lu seconds %lu microseconds\n", tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec);
+    i++;
+    fprintf(time_log, "Image COpy back to Host: %lu seconds %lu microseconds\n", tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec);
+    i++;
+    fprintf(time_log, "Writing Encoded to File: %lu seconds %lu microseconds\n", tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec);
+
     fclose(ip);
     fclose(op);
-
+    fclose(time_log);
     return 0;
 }
