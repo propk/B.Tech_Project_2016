@@ -1,0 +1,28 @@
+Split and Join tar.gz file on Linux
+One time, when we want to uploading a file, we are having difficulties because the file size is too large and our internet speed is so slow. Therefore, we must split our file into some small parts so we can upload it per small parts. How to do this?
+
+ First, we must compress the file with tarball archiver.
+
+$ tar -cvvzf <archive-name>.tar.gz /path/to/folder
+
+This command file archive our folder to *.tar.gz. We can use file instead of path to folder for the argument. Then we will split up our file archive into small parts.
+
+$ split -b 1M <archive-name>.tar.gz "parts-prefix"
+
+-b 1M will split the file into 1 Megabytes size of file.The "part-prefix" will give the prefix name of our parts of file.
+
+Example:
+
+We have a video file name video.avi that have size of 30 MB. We will split it into 5 MB per parts. We can do :
+
+$ tar -cvvzf test.tar.gz  video.avi
+
+$ split -v 5M test.tar.gz vid
+
+This command will create the archive file name test.tar.gz. Then, it will split into (approximately) six parts of 5MB file. They have prefix "vid", so the result will be vidaa, vidab, vidac, vidad, vidae, and vidaf. We can use number instead of letter on the suffix by adding -d option on the split command
+
+$ split -v 5M -d test.tar.gz video.avi
+
+ to join this file, we can use cat command.
+
+$ cat vid* > test.tar.gz
