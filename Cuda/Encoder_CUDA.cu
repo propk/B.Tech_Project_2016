@@ -506,20 +506,21 @@ int main()
     FILE *time_log = fopen("timing_log.txt", "w");
 
     gettimeofday(&tim[t], NULL); t++;
-    FILE *ip = fopen("image.txt", "r");
+    FILE *ip = fopen("BImage", "r");
     FILE *op = fopen("encoded.txt", "w");
 
     // read image in host
     int imageWidth = 112, imageHeight=128;
     //scanf("%d %d", &imageHeight, &imageWidth);
-    int image[128][112]; // = (int**) malloc(imageHeight * sizeof(int*) );
+    //int image[128][112]; // = 
+    int *image = (int*) malloc(imageHeight * imageWidth * sizeof(int) );
     int i, j;
 
     for(i = 0; i < imageHeight; i++){
         //image[i] = (int*) malloc(imageWidth * sizeof(int) );
 
         for(j = 0; j < imageWidth; j++)
-            fscanf(ip, "%d", &image[i][j]);
+            fscanf(ip, "%d", &image[i * imageWidth + j]);
     }
     gettimeofday(&tim[t], NULL); t++;
 
@@ -568,7 +569,7 @@ int main()
     for( i = 0; i < imageHeight; i++)
     {
         for( j = 0; j < imageWidth; j++)
-            fprintf(op, "%d ", image[i][j] );
+            fprintf(op, "%d ", image[i * imageWidth + j] );
         fprintf(op, "\n");
     }
     gettimeofday(&tim[t], NULL); t++;
