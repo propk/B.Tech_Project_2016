@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/time.h>
 
 void T2x2H(int *iCoeff, int valRound)
 {
@@ -513,45 +514,67 @@ void EncSecondStageOverlapFilter(int **image, int numRows, int numCols)
 
 int main()
 {
-  FILE *ip = fopen("image.txt", "r");
-  FILE *op = fopen("encoded.txt", "w");
-
-  // read image in host
-  int imageWidth = 112, imageHeight =  128;
+  struct timeval tim[50];
+  int t = 0;
+        
+  FILE *stg1 = fopen("EncoderStage1.log", "w");
+  FILE *stg2 = fopen("EncoderStage2.log", "w");
+  FILE *stg3 = fopen("EncoderStage3.log", "w");
+  FILE *stg4 = fopen("EncoderStage4.log", "w");
+  
+  int imageWidth,imageHeight,
   //scanf("%d %d", &imageHeight, &imageWidth);
-  int **image = (int**) malloc(imageHeight * sizeof(int*) );
-  int i, j;
-  for(i = 0; i < imageHeight; i++){
-      image[i] = (int*) malloc(imageWidth * sizeof(int) );
-
-      for(j = 0; j < imageWidth; j++)
-          fscanf(ip, "%d", &image[i][j]);
-  }
-
-  /* kernel invocation start */
-
-  // second stage frequency transform
-  EncSecondStageOverlapFilter(image, imageHeight, imageWidth);
-
-  // first stage pre-filtering
-  EncFirstStagePreFiltering(image, imageHeight, imageWidth);
-
-  // first stage frequency transform
-  EncFirstStageOverlapFilter(image, imageHeight, imageWidth);
-
-  // second stage pre-filtering
-  EncSecondStagePreFiltering(image, imageHeight, imageWidth);
-
-  /* kernel function invocation end */
-
-  //store processed image in file
-  for( i = 0; i < imageHeight; i++)
+  for(imageHeight = 256, imageHeight = 512; imageHeight <= 8000 && imageWidth <= 16000; imageHeight += 256, imageWidth += 512 )
   {
-      for( j = 0; j < imageWidth; j++)
-          fprintf(op, "%d ", image[i][j] );
-      fprintf(op, "\n");
-  }
-  fclose(ip);
-  fclose(op);
-  return 0;
+      t = 0;
+      // read image in host
+      FILE *ip = fopen("image.txt", "r");
+      FILE *op = fopen("encoded.txt", "w");
+      
+      int **image = (int**) malloc(imageHeight * sizeof(int*) );
+      int i, j;
+      for(i = 0; i < imageHeight; i++){
+          image[i] = (int*) malloc(imageWidth * sizeof(int) );
+    
+          for(j = 0; j < imageWidth; j++)
+              fscanf(ip, "%d", &image[i][j]);
+      }
+    
+      /* kernel invocation start */
+        gettimeofday(&tim[t], NULL); t++;
+      // second stage frequency transform
+      EncSecondStageOverlapFilter(image, imageHeight, imageWidth);
+        gettimeofday(&tim[t], NULL); t++;
+      // first stage pre-filtering
+      EncFirstStagePreFiltering(image, imageHeight, imageWidth);
+        gettimeofday(&tim[t], NULL); t++;
+      // first stage frequency transform
+      EncFirstStageOverlapFilter(image, imageHeight, imageWidth);
+        gettimeofday(&tim[t], NULL); t++;
+      // second stage pre-filtering
+      EncSecondStagePreFiltering(image, imageHeight, imageWidth);
+        gettimeofday(&tim[t], NULL); t++;
+      /* kernel function invocation end */
+    
+      //store processed image in file
+      for( i = 0; i < imageHeight; i++)
+      {
+          for( j = 0; j < imageWidth; j++)
+              fprintf(op, "%d ", image[i][j] );
+          fprintf(op, "\n");
+      }
+      
+      i = 0;
+      frpintf(stg1 ,%d %lu %lu, imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
+      frpintf(stg2 ,%d %lu %lu, imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
+      frpintf(stg3 ,%d %lu %lu, imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
+      frpintf(stg4 ,%d %lu %lu, imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
+      
+      fclose(ip);
+      fclose(op);
+      free(image);
+      
+    }
+    fclose(stg1); fclose(stg2); fclose(stg3); fclose(stg4);
+    return 0;
 }
