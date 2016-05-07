@@ -526,7 +526,7 @@ int main()
   //scanf("%d %d", &imageHeight, &imageWidth);
   for(imageHeight = 256, imageWidth = 512; imageHeight <= 8000 && imageWidth <= 16000; imageHeight += 256, imageWidth += 512 )
   {
-      t = 0;
+      //t = 0;
       // read image in host
       FILE *ip = fopen("image.txt", "r");
       FILE *op = fopen("encoded.txt", "w");
