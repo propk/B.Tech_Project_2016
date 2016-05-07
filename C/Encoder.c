@@ -521,7 +521,7 @@ int main()
   FILE *stg2 = fopen("EncoderStage2.log", "w");
   FILE *stg3 = fopen("EncoderStage3.log", "w");
   FILE *stg4 = fopen("EncoderStage4.log", "w");
-  FILE *ip. *op;
+  FILE *ip, *op;
   
   int imageWidth,imageHeight;
   //scanf("%d %d", &imageHeight, &imageWidth);
