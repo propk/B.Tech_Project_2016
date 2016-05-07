@@ -522,7 +522,7 @@ int main()
   FILE *stg3 = fopen("EncoderStage3.log", "w");
   FILE *stg4 = fopen("EncoderStage4.log", "w");
   
-  int imageWidth,imageHeight,
+  int imageWidth,imageHeight;
   //scanf("%d %d", &imageHeight, &imageWidth);
   for(imageHeight = 256, imageHeight = 512; imageHeight <= 8000 && imageWidth <= 16000; imageHeight += 256, imageWidth += 512 )
   {
@@ -565,10 +565,10 @@ int main()
       }
       
       i = 0;
-      frpintf(stg1 ,%d %lu %lu, imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
-      frpintf(stg2 ,%d %lu %lu, imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
-      frpintf(stg3 ,%d %lu %lu, imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
-      frpintf(stg4 ,%d %lu %lu, imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
+      frpintf(stg1 ,"%d %lu %lu", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
+      frpintf(stg2 ,"%d %lu %lu", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
+      frpintf(stg3 ,"%d %lu %lu", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
+      frpintf(stg4 ,"%d %lu %lu", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
       
       fclose(ip);
       fclose(op);
