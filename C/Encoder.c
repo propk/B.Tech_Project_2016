@@ -565,10 +565,10 @@ int main()
       }
       
       i = 0;
-      frpintf(stg1 ,"%d %lu %lu", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
-      frpintf(stg2 ,"%d %lu %lu", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
-      frpintf(stg3 ,"%d %lu %lu", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
-      frpintf(stg4 ,"%d %lu %lu", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
+      fprintf(stg1 ,"%d %lu %lu", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
+      fprintf(stg2 ,"%d %lu %lu", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
+      fprintf(stg3 ,"%d %lu %lu", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
+      fprintf(stg4 ,"%d %lu %lu", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
       
       fclose(ip);
       fclose(op);
