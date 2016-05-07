@@ -510,7 +510,7 @@ int main()
     FILE *op = fopen("encoded.txt", "w");
 
     // read image in host
-    int imageWidth = 112, imageHeight=128;
+    int imageWidth = 16000, imageHeight=8000;
     //scanf("%d %d", &imageHeight, &imageWidth);
     //int image[128][112]; // = 
     int *image = (int*) malloc(imageHeight * imageWidth * sizeof(int) );
