@@ -514,8 +514,8 @@ void EncSecondStageOverlapFilter(int **image, int numRows, int numCols)
 
 int main()
 {
-  struct timeval tim[50];
-  int t = 0;
+  //struct timeval tim[50];
+  //int t = 0;
         
   FILE *stg1 = fopen("EncoderStage1.log", "w");
   FILE *stg2 = fopen("EncoderStage2.log", "w");
@@ -541,19 +541,19 @@ int main()
       }
     
       /* kernel invocation start */
-        gettimeofday(&tim[t], NULL); t++;
+        //gettimeofday(&tim[t], NULL); t++;
       // second stage frequency transform
       EncSecondStageOverlapFilter(image, imageHeight, imageWidth);
-        gettimeofday(&tim[t], NULL); t++;
+        //gettimeofday(&tim[t], NULL); t++;
       // first stage pre-filtering
       EncFirstStagePreFiltering(image, imageHeight, imageWidth);
-        gettimeofday(&tim[t], NULL); t++;
+        //gettimeofday(&tim[t], NULL); t++;
       // first stage frequency transform
       EncFirstStageOverlapFilter(image, imageHeight, imageWidth);
-        gettimeofday(&tim[t], NULL); t++;
+        //gettimeofday(&tim[t], NULL); t++;
       // second stage pre-filtering
       EncSecondStagePreFiltering(image, imageHeight, imageWidth);
-        gettimeofday(&tim[t], NULL); t++;
+        //gettimeofday(&tim[t], NULL); t++;
       /* kernel function invocation end */
     
       //store processed image in file
@@ -565,10 +565,10 @@ int main()
       }
       
       i = 0;
-      fprintf(stg1 ,"%d %lu %lu", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
-      fprintf(stg2 ,"%d %lu %lu", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
-      fprintf(stg3 ,"%d %lu %lu", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
-      fprintf(stg4 ,"%d %lu %lu", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
+      //fprintf(stg1 ,"%d %lu %lu", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
+      //fprintf(stg2 ,"%d %lu %lu", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
+      //fprintf(stg3 ,"%d %lu %lu", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
+      //fprintf(stg4 ,"%d %lu %lu", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
       
       fclose(ip);
       fclose(op);
