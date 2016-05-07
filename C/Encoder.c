@@ -572,7 +572,7 @@ int main()
       
       fclose(ip);
       fclose(op);
-      free(image);
+      //free(image);
       
     }
     fclose(stg1); fclose(stg2); fclose(stg3); fclose(stg4);
