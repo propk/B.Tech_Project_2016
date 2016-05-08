@@ -586,12 +586,12 @@ int main()
         //gettimeofday(&tim[t], NULL); t++;
     
         //store processed image in file
-        for( i = 0; i < imageHeight; i++)
+        /*for( i = 0; i < imageHeight; i++)
         {
             for( j = 0; j < imageWidth; j++)
                 fprintf(op, "%d ", image[i * imageWidth + j] );
             fprintf(op, "\n");
-        }
+        }*/
         //gettimeofday(&tim[t], NULL); t++;
     
         //time logs
@@ -623,6 +623,7 @@ int main()
         */
         fclose(ip);
         fclose(op);
+        free(image);
     }
     fclose(time_log);
     return 0;
