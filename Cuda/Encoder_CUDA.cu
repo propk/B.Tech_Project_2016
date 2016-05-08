@@ -579,7 +579,7 @@ int main()
             fprintf(op, "%d ", image[i * imageWidth + j] );
         fprintf(op, "\n");
     }
-    gettimeofday(&tim[t], NULL); t++;
+    //gettimeofday(&tim[t], NULL); t++;
 
     //time logs
     i = 0;
