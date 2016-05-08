@@ -500,7 +500,7 @@ __global__ void EncSecondStageOverlapFilter(int* image, int numRows, int numCols
 
 int main()
 {
-    long tim[50];
+    long long tim[50];
     int t = 0;
 
     FILE *time_log = fopen("timing_log.txt", "w");
@@ -583,13 +583,12 @@ int main()
 
     //time logs
     i = 0;
-    
-    fprintf(time_log, "%ld\n", (tim[i+1]-tim[i])/CLOCKS_PER_SEC); i++;
-    fprintf(time_log, "%ld\n", (tim[i+1]-tim[i])/CLOCKS_PER_SEC); i++;
-    fprintf(time_log, "%ld\n", (tim[i+1]-tim[i])/CLOCKS_PER_SEC); i++;
-    fprintf(time_log, "%ld\n", (tim[i+1]-tim[i])/CLOCKS_PER_SEC); i++;
-    fprintf(time_log, "Synchronize: %ld\n", (tim[i+1]-tim[i])/CLOCKS_PER_SEC); i++;
-    fprintf(time_log, "Mmcpy:%ld\n", (tim[i+1]-tim[i])/CLOCKS_PER_SEC); i++;
+    fprintf(time_log, "%lld\n", (tim[i+1]-tim[i])*1000000/CLOCKS_PER_SEC); i++;
+    fprintf(time_log, "%lld\n", (tim[i+1]-tim[i])*1000000/CLOCKS_PER_SEC); i++;
+    fprintf(time_log, "%lld\n", (tim[i+1]-tim[i])*1000000/CLOCKS_PER_SEC); i++;
+    fprintf(time_log, "%lld\n", (tim[i+1]-tim[i])*1000000/CLOCKS_PER_SEC); i++;
+    fprintf(time_log, "Synchronize: %lld\n", (tim[i+1]-tim[i])*1000000/CLOCKS_PER_SEC); i++;
+    fprintf(time_log, "Mmcpy:%lld\n", (tim[i+1]-tim[i])*1000000/CLOCKS_PER_SEC); i++;
     /*
     fprintf(time_log, "Image Read from file: %lu seconds %lu microseconds\n", tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec);
     i++;
