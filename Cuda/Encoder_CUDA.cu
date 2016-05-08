@@ -505,7 +505,7 @@ int main()
 
     FILE *time_log = fopen("timing_log.txt", "w");
 
-    gettimeofday(&tim[t], NULL); t++;
+    //gettimeofday(&tim[t], NULL); t++;
     FILE *ip = fopen("BImage", "r");
     FILE *op = fopen("encoded.txt", "w");
 
@@ -522,7 +522,7 @@ int main()
         for(j = 0; j < imageWidth; j++)
             fscanf(ip, "%d", &image[i * imageWidth + j]);
     }
-    gettimeofday(&tim[t], NULL); t++;
+    //gettimeofday(&tim[t], NULL); t++;
 
     // allocate & copy image memory in device
     int *imageDevice;
@@ -588,6 +588,8 @@ int main()
     fprintf(time_log, "%ld\n", (tim[i+1]-tim[i])/CLOCKS_PER_SEC); i++;
     fprintf(time_log, "%ld\n", (tim[i+1]-tim[i])/CLOCKS_PER_SEC); i++;
     fprintf(time_log, "%ld\n", (tim[i+1]-tim[i])/CLOCKS_PER_SEC); i++;
+    fprintf(time_log, "Synchronize: %ld\n", (tim[i+1]-tim[i])/CLOCKS_PER_SEC); i++;
+    fprintf(time_log, "Mmcpy:%ld\n", (tim[i+1]-tim[i])/CLOCKS_PER_SEC); i++;
     /*
     fprintf(time_log, "Image Read from file: %lu seconds %lu microseconds\n", tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec);
     i++;
