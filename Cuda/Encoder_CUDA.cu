@@ -503,7 +503,7 @@ int main()
     long long tim[50];
     int t = 0;
     float times;
-    cudaevent_t start, stop;
+    cudaEvent_t start, stop;
     
     FILE *time_log = fopen("timing_log.txt", "w");
 
