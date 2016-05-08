@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/time.h>
+#include <time.h>
 //__global__ int *arrayLocal_16, *arrayLocal_4;
 
 __device__ void T2x2H(int *iCoeff, int valRound)
@@ -500,7 +500,7 @@ __global__ void EncSecondStageOverlapFilter(int* image, int numRows, int numCols
 
 int main()
 {
-    struct timeval tim[50];
+    long tim[50];
     int t = 0;
 
     FILE *time_log = fopen("timing_log.txt", "w");
@@ -536,34 +536,41 @@ int main()
     dim3 DimGrid2(imageHeight/4-1, imageWidth/4-1);
     dim3 DimGrid3(imageHeight/16-1, imageWidth/16-1);
 
-    gettimeofday(&tim[t], NULL); t++;
+    tim[t] = clock(); t++;
+    //gettimeofday(&tim[t], NULL); t++;
 
     // second stage frequency transform
     EncSecondStageOverlapFilter<<< DimGrid2, 1>>>(imageDevice, imageHeight, imageWidth);
-    gettimeofday(&tim[t], NULL); t++;
+     tim[t] = clock(); t++;
+    //gettimeofday(&tim[t], NULL); t++;
 
     // first stage pre-filtering
     EncFirstStagePreFiltering<<< DimGrid, DimBlock>>>(imageDevice, imageHeight, imageWidth);
-    gettimeofday(&tim[t], NULL); t++;
+     tim[t] = clock(); t++;
+    //gettimeofday(&tim[t], NULL); t++;
 
     // first stage frequency transform
     EncFirstStageOverlapFilter<<< DimGrid3, 1>>>(imageDevice, imageHeight, imageWidth);
-    gettimeofday(&tim[t], NULL); t++;
+     tim[t] = clock(); t++;
+    //gettimeofday(&tim[t], NULL); t++;
 
     // second stage pre-filtering
     EncSecondStagePreFiltering<<< DimGrid, 1>>>(imageDevice, imageHeight, imageWidth);
-    gettimeofday(&tim[t], NULL); t++;
+     tim[t] = clock(); t++;
+    //gettimeofday(&tim[t], NULL); t++;
 
     /* kernel function invocation end*/
     cudaDeviceSynchronize();
-    gettimeofday(&tim[t], NULL); t++;
+     tim[t] = clock(); t++;
+    //gettimeofday(&tim[t], NULL); t++;
 
     // copy from device to host
     cudaMemcpy(image, imageDevice, size, cudaMemcpyDeviceToHost);
 
     //free device memory
     cudaFree(imageDevice);
-    gettimeofday(&tim[t], NULL); t++;
+     tim[t] = clock(); t++;
+    //gettimeofday(&tim[t], NULL); t++;
 
     //store processed image in file
     for( i = 0; i < imageHeight; i++)
@@ -576,7 +583,12 @@ int main()
 
     //time logs
     i = 0;
-
+    
+    fprintf(time_log, "%ld\n", (tim[i+1]-tim[i])/CLOCKS_PER_SEC); i++;
+    fprintf(time_log, "%ld\n", (tim[i+1]-tim[i])/CLOCKS_PER_SEC); i++;
+    fprintf(time_log, "%ld\n", (tim[i+1]-tim[i])/CLOCKS_PER_SEC); i++;
+    fprintf(time_log, "%ld\n", (tim[i+1]-tim[i])/CLOCKS_PER_SEC); i++;
+    /*
     fprintf(time_log, "Image Read from file: %lu seconds %lu microseconds\n", tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec);
     i++;
     fprintf(time_log, "Image Copy To Device: %lu seconds %lu microseconds\n", tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec);
@@ -594,7 +606,7 @@ int main()
     fprintf(time_log, "Image COpy back to Host: %lu seconds %lu microseconds\n", tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec);
     i++;
     fprintf(time_log, "Writing Encoded to File: %lu seconds %lu microseconds\n", tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec);
-
+    */
     fclose(ip);
     fclose(op);
     fclose(time_log);
