@@ -502,7 +502,9 @@ int main()
 {
     long long tim[50];
     int t = 0;
-
+    float times;
+    cudaevent_t start, stop;
+    
     FILE *time_log = fopen("timing_log.txt", "w");
 
     //gettimeofday(&tim[t], NULL); t++;
@@ -538,7 +540,12 @@ int main()
 
     tim[t] = clock(); t++;
     //gettimeofday(&tim[t], NULL); t++;
-
+    
+    cudaEventCreate(&start);
+    cudaEventCreate(&stop);
+    cudaEventRecord(start,0);
+    
+    
     // second stage frequency transform
     EncSecondStageOverlapFilter<<< DimGrid2, 1>>>(imageDevice, imageHeight, imageWidth);
      tim[t] = clock(); t++;
@@ -563,7 +570,11 @@ int main()
     cudaDeviceSynchronize();
      tim[t] = clock(); t++;
     //gettimeofday(&tim[t], NULL); t++;
-
+    
+    cudaEventRecord(stop, 0);
+    cudaEventSynchronize(stop);
+    cudaEventElapsedTime(&times, start, stop);
+    fprintf(time_log,"Time to generate:  %3.1f ms \n", times);
     // copy from device to host
     cudaMemcpy(image, imageDevice, size, cudaMemcpyDeviceToHost);
 
