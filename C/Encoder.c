@@ -528,7 +528,7 @@ int main()
   {
       t = 0;
       // read image in host
-      FILE *ip = fopen("test.txt", "r");
+      FILE *ip = fopen("BImage", "r");
       FILE *op = fopen("encoded.txt", "w");
       
       int **image = (int**) malloc(imageHeight * sizeof(int*) );
@@ -565,13 +565,13 @@ int main()
       }
       
       i = 0;
-      fprintf(stg1 ,"%d %lu %llu\n", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
+      fprintf(stg1 ,"%d %lu %lu\n", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
       i++;
-      fprintf(stg2 ,"%d %lu %llu\n", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
+      fprintf(stg2 ,"%d %lu %lu\n", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
       i++;
-      fprintf(stg3 ,"%d %lu %llu\n", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
+      fprintf(stg3 ,"%d %lu %lu\n", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
       i++;
-      fprintf(stg4 ,"%d %lu %llu\n", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
+      fprintf(stg4 ,"%d %lu %lu\n", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
       
       fclose(ip);
       fclose(op);
