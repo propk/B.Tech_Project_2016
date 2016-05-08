@@ -554,21 +554,21 @@ int main()
         EncFirstStagePreFiltering<<< DimGrid, DimBlock>>>(imageDevice, imageHeight, imageWidth);
          tim[t] = clock(); t++;
         //gettimeofday(&tim[t], NULL); t++;
+        
+        // first stage frequency transform
+        EncFirstStageOverlapFilter<<< DimGrid3, 1>>>(imageDevice, imageHeight, imageWidth);
+         tim[t] = clock(); t++;
+        //gettimeofday(&tim[t], NULL); t++;
         cudaEventCreate(&start);
         cudaEventCreate(&stop);
         cudaEventRecord(start,0);
-        // first stage frequency transform
-        EncFirstStageOverlapFilter<<< DimGrid3, 1>>>(imageDevice, imageHeight, imageWidth);
+        // second stage pre-filtering
+        EncSecondStagePreFiltering<<< DimGrid, 1>>>(imageDevice, imageHeight, imageWidth);
          tim[t] = clock(); t++;
         //gettimeofday(&tim[t], NULL); t++;
         cudaEventRecord(stop, 0);
         cudaEventSynchronize(stop);
         cudaEventElapsedTime(&times, start, stop);
-        // second stage pre-filtering
-        EncSecondStagePreFiltering<<< DimGrid, 1>>>(imageDevice, imageHeight, imageWidth);
-         tim[t] = clock(); t++;
-        //gettimeofday(&tim[t], NULL); t++;
-    
         /* kernel function invocation end*/
         cudaDeviceSynchronize();
          tim[t] = clock(); t++;
