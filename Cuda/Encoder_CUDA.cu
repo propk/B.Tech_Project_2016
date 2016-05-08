@@ -505,7 +505,7 @@ int main()
     
     int imageWidth = 16000, imageHeight=8000;
     FILE *time_log = fopen("timing_log.txt", "w");
-    for(imageHeight = 512, imageWidth = 1024; imageHeight <= 8000 && imageWidth <= 16000; imageHeight += 512, imageWidth += 1024)
+    for(imageHeight = 512, imageWidth = 1024; imageHeight <= 4000 && imageWidth <= 8000; imageHeight += 512, imageWidth += 1024)
     {
         //gettimeofday(&tim[t], NULL); t++;
         FILE *ip = fopen("BImage", "r");
