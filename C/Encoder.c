@@ -517,10 +517,7 @@ int main()
   struct timeval tim[50];
   int t = 0;
         
-  FILE *stg1 = fopen("EncoderStage1.log", "w");
-  FILE *stg2 = fopen("EncoderStage2.log", "w");
-  FILE *stg3 = fopen("EncoderStage3.log", "w");
-  FILE *stg4 = fopen("EncoderStage4.log", "w");
+  FILE *enc = fopen("Encoder.log", "w");
   
   int imageWidth,imageHeight;
   //scanf("%d %d", &imageHeight, &imageWidth);
@@ -544,13 +541,10 @@ int main()
         gettimeofday(&tim[t], NULL); t++;
       // second stage frequency transform
       EncSecondStageOverlapFilter(image, imageHeight, imageWidth);
-        gettimeofday(&tim[t], NULL); t++;
       // first stage pre-filtering
       EncFirstStagePreFiltering(image, imageHeight, imageWidth);
-        gettimeofday(&tim[t], NULL); t++;
       // first stage frequency transform
       EncFirstStageOverlapFilter(image, imageHeight, imageWidth);
-        gettimeofday(&tim[t], NULL); t++;
       // second stage pre-filtering
       EncSecondStagePreFiltering(image, imageHeight, imageWidth);
         gettimeofday(&tim[t], NULL); t++;
@@ -565,19 +559,13 @@ int main()
       }
       
       i = 0;
-      fprintf(stg1 ,"%d %lu %lu\n", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
-      i++;
-      fprintf(stg2 ,"%d %lu %lu\n", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
-      i++;
-      fprintf(stg3 ,"%d %lu %lu\n", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
-      i++;
-      fprintf(stg4 ,"%d %lu %lu\n", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
+      fprintf(enc ,"%d %lu %lu\n", imageHeight*imageWidth, tim[i+1].tv_sec - tim[i].tv_sec, tim[i+1].tv_usec - tim[i].tv_usec );
       
       fclose(ip);
       fclose(op);
       free(image);
       
     }
-    fclose(stg1); fclose(stg2); fclose(stg3); fclose(stg4);
+    fclose(enc);
     return 0;
 }
