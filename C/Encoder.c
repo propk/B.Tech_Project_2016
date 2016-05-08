@@ -524,7 +524,7 @@ int main()
   
   int imageWidth,imageHeight;
   //scanf("%d %d", &imageHeight, &imageWidth);
-  for(imageHeight = 256, imageWidth = 512; imageHeight <= 8000 && imageWidth <= 16000; imageHeight += 256, imageWidth += 512 )
+  for(imageHeight = 512, imageWidth = 1024; imageHeight <= 8000 && imageWidth <= 16000; imageHeight += 512, imageWidth += 1024 )
   {
       t = 0;
       // read image in host
