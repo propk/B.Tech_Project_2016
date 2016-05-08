@@ -576,7 +576,7 @@ int main()
          tim[t] = clock(); t++;
         //gettimeofday(&tim[t], NULL); t++;
         
-        fprintf(time_log,"%3.1f\n", times);
+        fprintf(time_log,"%ld %3.1f\n", (long)imageHeight*imageWidth,times);
         // copy from device to host
         cudaMemcpy(image, imageDevice, size, cudaMemcpyDeviceToHost);
     
