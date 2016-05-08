@@ -505,7 +505,7 @@ int main()
     
     int imageWidth = 16000, imageHeight=8000;
     FILE *time_log = fopen("timing_log.txt", "w");
-    for(imageHeight = 512, imageWidth = 1024; imageHeight <= 7000 && imageWidth <= 14000; imageHeight += 512, imageWidth += 1024)
+    for(imageHeight = 512, imageWidth = 1024; imageHeight <= 4000 && imageWidth <= 8000; imageHeight += 512, imageWidth += 1024)
     {
         //gettimeofday(&tim[t], NULL); t++;
         FILE *ip = fopen("BImage", "r");
@@ -542,25 +542,25 @@ int main()
         tim[t] = clock(); t++;
         //gettimeofday(&tim[t], NULL); t++;
         
-        cudaEventCreate(&start);
-        cudaEventCreate(&stop);
-        cudaEventRecord(start,0);
+        
         
         
         // second stage frequency transform
         EncSecondStageOverlapFilter<<< DimGrid2, 1>>>(imageDevice, imageHeight, imageWidth);
          tim[t] = clock(); t++;
         //gettimeofday(&tim[t], NULL); t++;
+        cudaEventCreate(&start);
+        cudaEventCreate(&stop);
+        cudaEventRecord(start,0);
         
-        cudaEventRecord(stop, 0);
-        cudaEventSynchronize(stop);
-        cudaEventElapsedTime(&times, start, stop);
         
         // first stage pre-filtering
         EncFirstStagePreFiltering<<< DimGrid, DimBlock>>>(imageDevice, imageHeight, imageWidth);
          tim[t] = clock(); t++;
         //gettimeofday(&tim[t], NULL); t++;
-    
+        cudaEventRecord(stop, 0);
+        cudaEventSynchronize(stop);
+        cudaEventElapsedTime(&times, start, stop);
         // first stage frequency transform
         EncFirstStageOverlapFilter<<< DimGrid3, 1>>>(imageDevice, imageHeight, imageWidth);
          tim[t] = clock(); t++;
